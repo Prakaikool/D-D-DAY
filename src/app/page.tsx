@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
 
@@ -9,7 +10,7 @@ function dayOfYearUTC(d: Date) {
     return Math.floor((now - start) / 86400000);
 }
 
-function formatDateYYMMDD(d: Date) {
+function formatDate(d: Date) {
     const yy = String(d.getFullYear()).slice(2);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
@@ -23,9 +24,9 @@ export default function Home() {
     }, []);
 
     const [index, setIndex] = useState(todayIndex);
-
     const msg = MESSAGES[index];
-    const dateLabel = useMemo(() => formatDateYYMMDD(new Date()), []);
+
+    const dateLabel = useMemo(() => formatDate(new Date()), []);
 
     function handleClick() {
         setIndex((prev) => {
@@ -38,81 +39,101 @@ export default function Home() {
     }
 
     return (
-        <main className="min-h-screen bg-[#F7BFCC]">
-            {/* top bar */}
-            <div className="bg-[#F7BFCC] py-4" />
-            <header className="bg-[#5a1f1f] px-6 py-4">
-                <h1 className="font-mono text-2xl tracking-widest text-white">
-                    D-D-DAY
-                </h1>
+        <main className="min-h-screen bg-blush font-onest text-cocoa">
+            {/* Top bar */}
+            <header className="mx-auto max-w-[980px] px-6 pt-6">
+                <div className="flex items-center justify-between rounded-t-2xl border-2 border-cocoa bg-cocoa px-6 py-4">
+                    <div className="font-mono text-2xl tracking-[0.25em] text-white">
+                        D-D-DAY
+                    </div>
+                    <button className="font-mono text-sm tracking-[0.2em] text-white/90 hover:text-white">
+                        ABOUT
+                    </button>
+                </div>
             </header>
 
-            {/* page wrapper */}
-            <section className="mx-auto max-w-[1500] px-4 py-8">
-                {/* paper card */}
-                <div className="relative overflow-hidden rounded-3xl border-2 border-[#5a1f1f] bg-gradient-to-b from-[#F7E498] via-amber-50 to-[#D9E8FF] shadow-[0_10px_0_rgba(90,31,31,0.25)]">
-                    {/* subtle grid */}
+            {/* Card */}
+            <section className="mx-auto max-w-[980px] px-6 pb-10">
+                <div className="relative overflow-hidden rounded-b-2xl border-x-2 border-b-2 border-cocoa bg-gradient-to-b from-sky via-[#EAF2FF] to-butter">
+                    {/* grid overlay (pink) */}
                     <div
                         className="pointer-events-none absolute inset-0"
                         style={{
                             backgroundImage: `
-  linear-gradient(to right, rgba(247,191,204,0.8) 2px, transparent 2px),
-  linear-gradient(to bottom, rgba(247,191,204,0.8) 2px, transparent 2px)
-`,
-                            backgroundSize: '52px 52px',
-                            opacity: 0.35
+                linear-gradient(to right, rgba(247,191,204,0.55) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(247,191,204,0.55) 1px, transparent 1px)
+              `,
+                            backgroundSize: '72px 72px',
+                            opacity: 0.55
                         }}
                     />
 
-                    {/* little rings (top right) */}
-                    <div className="absolute right-6 top-3 flex gap-1">
-                        <span className="h-10 w-10 rounded-full border-2 border-[#5a1f1f] bg-[#F7BFCC]" />
-                        <span className="h-10 w-10 rounded-full border-2 border-[#5a1f1f] bg-[#F7BFCC]" />
-                        <span className="h-10 w-10 rounded-full border-2 border-[#5a1f1f] bg-[#F7BFCC]" />
-                    </div>
+                    {/* Decorative PNGs */}
+                    <Image
+                        src="/decor/rainbow.png"
+                        alt=""
+                        width={520}
+                        height={520}
+                        className="pointer-events-none absolute -left-24 top-10 opacity-40"
+                        priority
+                    />
+                    <Image
+                        src="/decor/sun.png"
+                        alt=""
+                        width={120}
+                        height={120}
+                        className="pointer-events-none absolute right-20 top-20 opacity-20"
+                    />
+                    <Image
+                        src="/decor/heart.png"
+                        alt=""
+                        width={120}
+                        height={120}
+                        className="pointer-events-none absolute bottom-16 right-44 opacity-20"
+                    />
 
-                    {/* content */}
-                    <div className="relative px-6 pb-25 pt-25 text-center text-[#5a1f1f] font-mono">
-                        <p className="absolute left-6 top-4 font-mono text-[20px] opacity-80">
+                    {/* Content */}
+                    <div className="relative px-10 py-12">
+                        <div className="font-mono text-sm text-inkBlue">
                             {dateLabel}
-                        </p>
-
-                        <div>
-                            <h1 className="font-mono text-[36px] font-bold ">
-                                Hello, My favourite person!
-                            </h1>
-                            <p className="text-[24px] mt-6">
-                                Let me be a soft charpter in your story today.{' '}
-                                <br /> I hope it makes you smile...
-                            </p>
                         </div>
 
-                        <div className="mt-20 space-y-2 text-[24px] opacity-90">
+                        <h1 className="mt-10 text-center font-onest text-[40px] font-semibold leading-tight text-cocoa">
+                            {msg.title}
+                        </h1>
+
+                        <div className="mt-6 text-center font-mono text-[16px] leading-relaxed text-inkBlue">
                             {msg.lines.map((line, i) => (
                                 <p key={`${i}-${line}`}>{line}</p>
                             ))}
                         </div>
 
-                        <div className="mt-20 flex justify-center">
+                        <div className="mt-12 flex justify-center">
                             <button
                                 onClick={handleClick}
-                                className="rounded-full border-2 border-[#5a1f1f] bg-[#F7BFCC] px-20 py-4 text-[24px] shadow-[0_6px_0_rgba(90,31,31,0.25)] transition active:translate-y-[2px] active:shadow-[0_4px_0_rgba(90,31,31,0.25)]"
+                                className="
+                  rounded-full border-2 border-cocoa bg-blush px-10 py-4
+                  font-mono text-[18px] text-inkBlue
+                  shadow-[0_10px_0_rgba(79,29,22,0.18)]
+                  transition
+                  hover:-translate-y-[1px]
+                  active:translate-y-[2px]
+                  active:shadow-[0_6px_0_rgba(79,29,22,0.18)]
+                "
                             >
                                 Click here!
                             </button>
                         </div>
-
-                        <p className="mt-6 text-[11px] opacity-70">
-                            A small warm message for you today.
-                        </p>
                     </div>
                 </div>
-            </section>
 
-            {/* footer */}
-            <footer className="bg-[#5a1f1f] px-6 py-3">
-                <p className="text-sm text-white opacity-90">Prakaikool</p>
-            </footer>
+                {/* Footer strip */}
+                <div className="rounded-b-2xl bg-cocoa px-6 py-4">
+                    <p className="font-mono text-sm text-white/90">
+                        Prakaikool
+                    </p>
+                </div>
+            </section>
         </main>
     );
 }
