@@ -6,14 +6,14 @@ import { MESSAGES } from '@/data/messages';
 function dayOfYearUTC(d: Date) {
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
     const now = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-    return Math.floor((now - start) / 86400000); // 0..365
+    return Math.floor((now - start) / 86400000);
 }
 
 function formatDateYYMMDD(d: Date) {
     const yy = String(d.getFullYear()).slice(2);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
-    return `${dd}/${mm}-${yy}`; // ใกล้ ๆ แบบในรูป 04/02-26
+    return `${dd}/${mm}-${yy}`;
 }
 
 export default function Home() {
@@ -50,9 +50,19 @@ export default function Home() {
             {/* page wrapper */}
             <section className="mx-auto max-w-[1500] px-4 py-8">
                 {/* paper card */}
-                <div className="relative overflow-hidden rounded-3xl border-2 border-[#5a1f1f] bg-gradient-to-b from-sky-100 via-amber-50 to-amber-200 shadow-[0_10px_0_rgba(90,31,31,0.25)]">
+                <div className="relative overflow-hidden rounded-3xl border-2 border-[#5a1f1f] bg-gradient-to-b from-[#F7E498] via-amber-50 to-[#D9E8FF] shadow-[0_10px_0_rgba(90,31,31,0.25)]">
                     {/* subtle grid */}
-                    <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:52px_52px]" />
+                    <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                            backgroundImage: `
+  linear-gradient(to right, rgba(247,191,204,0.8) 2px, transparent 2px),
+  linear-gradient(to bottom, rgba(247,191,204,0.8) 2px, transparent 2px)
+`,
+                            backgroundSize: '52px 52px',
+                            opacity: 0.35
+                        }}
+                    />
 
                     {/* little rings (top right) */}
                     <div className="absolute right-6 top-3 flex gap-1">
