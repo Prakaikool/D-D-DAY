@@ -93,36 +93,25 @@ export default function Home() {
                     />
 
                     {/* Content */}
-                    <div className="relative px-10 py-12">
-                        <div className="font-mono text-sm text-inkBlue">
-                            {dateLabel}
-                        </div>
-
-                        <h1 className="mt-10 text-center font-onest text-[40px] font-semibold leading-tight text-cocoa">
-                            {msg.title}
-                        </h1>
-
-                        <div className="mt-6 text-center font-mono text-[16px] leading-relaxed text-inkBlue">
-                            {msg.lines.map((line, i) => (
-                                <p key={`${i}-${line}`}>{line}</p>
-                            ))}
-                        </div>
-
-                        <div className="mt-12 flex justify-center">
-                            <button
-                                onClick={handleClick}
-                                className="
-                  rounded-full border-2 border-cocoa bg-blush px-10 py-4
-                  font-mono text-[18px] text-inkBlue
-                  shadow-[0_10px_0_rgba(79,29,22,0.18)]
-                  transition
-                  hover:-translate-y-[1px]
-                  active:translate-y-[2px]
-                  active:shadow-[0_6px_0_rgba(79,29,22,0.18)]
-                "
+                    <div className="space-y-2 text-center">
+                        {msg.en.map((line, i) => (
+                            <p
+                                key={`en-${i}`}
+                                className="font-mono text-inkBlue"
                             >
-                                Click here!
-                            </button>
+                                {line}
+                            </p>
+                        ))}
+
+                        <div className="pt-2">
+                            {msg.th.map((line, i) => (
+                                <p
+                                    key={`th-${i}`}
+                                    className="font-onest text-cocoa"
+                                >
+                                    {line}
+                                </p>
+                            ))}
                         </div>
                     </div>
                 </div>
