@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
 
+/* ---------- helpers ---------- */
 function dayOfYearUTC(d: Date) {
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
     const now = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
@@ -17,6 +18,7 @@ function formatDate(d: Date) {
     return `${dd}/${mm}-${yy}`;
 }
 
+/* ---------- page ---------- */
 export default function Home() {
     const todayIndex = useMemo(() => {
         const doy = dayOfYearUTC(new Date());
@@ -25,24 +27,24 @@ export default function Home() {
 
     const [index, setIndex] = useState(todayIndex);
     const msg = MESSAGES[index];
-
     const dateLabel = useMemo(() => formatDate(new Date()), []);
 
     function handleClick() {
         setIndex((prev) => {
             if (MESSAGES.length <= 1) return prev;
             let next = prev;
-            while (next === prev)
+            while (next === prev) {
                 next = Math.floor(Math.random() * MESSAGES.length);
+            }
             return next;
         });
     }
 
     return (
-        <main className="min-h-screen bg-blush font-onest text-cocoa">
-            {/* Top bar */}
-            <header className="mx-auto max-w-[980px] px-6 pt-6">
-                <div className="flex items-center justify-between rounded-t-2xl border-2 border-cocoa bg-cocoa px-6 py-4">
+        <main className="min-h-screen flex flex-col bg-ddBlush font-onest text-ddCocoa">
+            {/* ---------- TOP BAR ---------- */}
+            <header className="mx-auto max-w-full px-6 pt-6">
+                <div className="flex items-center justify-between rounded-t-2xl border-2 border-ddCocoa bg-ddCocoa px-6 py-4">
                     <div className="font-mono text-2xl tracking-[0.25em] text-white">
                         D-D-DAY
                     </div>
@@ -52,9 +54,9 @@ export default function Home() {
                 </div>
             </header>
 
-            {/* Card */}
-            <section className="mx-auto max-w-[980px] px-6 pb-10">
-                <div className="relative overflow-hidden rounded-b-2xl border-x-2 border-b-2 border-cocoa bg-gradient-to-b from-sky via-[#EAF2FF] to-butter">
+            {/* ---------- CARD ---------- */}
+            <section className="mx-auto max-w-full px-6 pb-10">
+                <div className="relative overflow-hidden rounded-b-2xl border-x-2 border-b-2 border-ddCocoa bg-gradient-to-b from-ddSky via-[#EAF2FF] to-ddButter">
                     {/* grid overlay (pink) */}
                     <div
                         className="pointer-events-none absolute inset-0"
@@ -68,7 +70,7 @@ export default function Home() {
                         }}
                     />
 
-                    {/* Decorative PNGs */}
+                    {/* ---------- DECOR IMAGES ---------- */}
                     <Image
                         src="/decor/rainbow.png"
                         alt=""
@@ -92,37 +94,62 @@ export default function Home() {
                         className="pointer-events-none absolute bottom-16 right-44 opacity-20"
                     />
 
-                    {/* Content */}
-                    <div className="space-y-2 text-center">
-                        {msg.en.map((line, i) => (
-                            <p
-                                key={`en-${i}`}
-                                className="font-mono text-inkBlue"
-                            >
-                                {line}
-                            </p>
-                        ))}
+                    {/* ---------- CONTENT ---------- */}
+                    <div className="relative px-10 py-12">
+                        {/* date */}
+                        <div className="font-mono text-sm text-ddInkBlue">
+                            {dateLabel}
+                        </div>
 
-                        <div className="pt-2">
-                            {msg.th.map((line, i) => (
-                                <p
-                                    key={`th-${i}`}
-                                    className="font-onest text-cocoa"
-                                >
-                                    {line}
-                                </p>
-                            ))}
+                        {/* title */}
+                        <h1 className="mt-10 text-center font-onest text-[40px] font-semibold leading-tight text-ddCocoa">
+                            Hello, my favorite person!
+                        </h1>
+
+                        {/* messages */}
+                        <div className="mt-6 text-center">
+                            {/* EN */}
+                            <div className="space-y-2 font-mono text-[16px] leading-relaxed text-ddInkBlue">
+                                {msg.en.map((line, i) => (
+                                    <p key={`en-${i}`}>{line}</p>
+                                ))}
+                            </div>
+
+                            {/* TH */}
+                            <div className="mt-4 space-y-1 font-onest text-[16px] leading-relaxed text-ddCocoa">
+                                {msg.th.map((line, i) => (
+                                    <p key={`th-${i}`}>{line}</p>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* button */}
+                        <div className="mt-12 flex justify-center">
+                            <button
+                                onClick={handleClick}
+                                className="
+                  rounded-full border-2 border-ddCocoa bg-ddBlush px-10 py-4
+                  font-mono text-[18px] text-ddInkBlue
+                  shadow-[0_10px_0_rgba(79,29,22,0.18)]
+                  transition
+                  hover:-translate-y-[1px]
+                  active:translate-y-[2px]
+                  active:shadow-[0_6px_0_rgba(79,29,22,0.18)]
+                "
+                            >
+                                Click here!
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                {/* Footer strip */}
-                <div className="rounded-b-2xl bg-cocoa px-6 py-4">
+            </section>
+            <footer className="mt-auto bg-ddCocoa px-6 py-4">
+                <div className="mx-auto max-w-full">
                     <p className="font-mono text-sm text-white/90">
                         Prakaikool
                     </p>
                 </div>
-            </section>
+            </footer>
         </main>
     );
 }
