@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
+import Footer from './component/Footer';
 
 function dayOfYearUTC(d: Date) {
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
@@ -249,6 +250,8 @@ export default function Home() {
                     </div>
                 </div>
             )}
+
+            <Footer />
         </main>
     );
 }
