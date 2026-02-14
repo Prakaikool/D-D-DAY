@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 
 type OverlayQuoteCardProps = {
@@ -17,6 +15,8 @@ function QuotedText({
     lines: string[];
     className: string;
 }) {
+    // ✅ If lines are provided (1-2 lines), we keep them.
+    // But we still make wrapping look nicer with text-balance and a max width.
     const hasMultiple = lines.length > 1;
 
     return (
@@ -63,9 +63,9 @@ export default function OverlayQuoteCard({
                 className="pointer-events-none absolute inset-0"
                 style={{
                     backgroundImage: `
-            linear-gradient(to right, rgba(247,191,204,0.35) 2px, transparent 2px),
-            linear-gradient(to bottom, rgba(247,191,204,0.35) 2px, transparent 2px)
-          `,
+                linear-gradient(to right, rgba(247,191,204,0.35) 2px, transparent 2px),
+                linear-gradient(to bottom, rgba(247,191,204,0.35) 2px, transparent 2px)
+              `,
                     backgroundSize: '56px 56px',
                     opacity: 0.25
                 }}
@@ -78,7 +78,7 @@ export default function OverlayQuoteCard({
         "
                 onMouseDown={(e) => e.stopPropagation()}
             >
-                {/* Close (always clickable) */}
+                {/* Close */}
                 <button
                     type="button"
                     onClick={onClose}
@@ -103,7 +103,14 @@ export default function OverlayQuoteCard({
           "
                 >
                     {/* background image */}
-                    <Image src={bgSrc} alt="" fill className="object-contain" />
+                    <Image
+                        src={bgSrc}
+                        alt=""
+                        fill
+                        className="object-contain"
+                        // optional: helps avoid heavy caching while dev
+                        // unoptimized
+                    />
 
                     {/* Content */}
                     <div
@@ -113,35 +120,21 @@ export default function OverlayQuoteCard({
               p-4 sm:p-8
             "
                     >
-                        {/* ✅ ANDROID/FLIP FIX: clamp width + safe padding */}
-                        <div
-                            className="
-                relative w-full
-                max-w-[min(86vw,320px)]      /* mobile (Flip/Android) ไม่ล้น */
-                sm:max-w-[420px]
-                lg:max-w-[380px]             /* desktop ไม่ใหญ่เกิน */
-                overflow-auto
-                rounded-xl lg:rounded-2xl
-                px-3 max-[380px]:px-2 sm:px-0 /* กันชนขอบจอเล็กมาก */
-              "
-                        >
-                            {/* ✅ push left a bit on mobile */}
-                            <p className="font-mono text-ddInkBlue text-[16px] sm:text-[22px] pl-1 sm:pl-0">
+                        <div className="relative w-full max-w-[280px] sm:max-w-[420px] lg:max-w-[380px] overflow-auto rounded-xl lg:rounded-2xl">
+                            <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Dear, You!
                             </p>
 
                             {/* EN */}
                             <div className="mt-4 sm:mt-12 text-center">
-                                {/* ✅ narrower on very small screens (Android/Flip) */}
-                                <div className="mx-auto max-w-[22ch] max-[380px]:max-w-[20ch] sm:max-w-[32ch]">
+                                <div className="mx-auto max-w-[26ch] sm:max-w-[32ch]">
                                     <QuotedText
                                         lines={enLines}
                                         className="
                       font-mono text-ddCocoa
                       text-[16px] sm:text-[22px]
                       leading-relaxed
-                      break-words
-                      [overflow-wrap:anywhere]
+                      text-balance
                     "
                                     />
                                 </div>
@@ -149,22 +142,20 @@ export default function OverlayQuoteCard({
 
                             {/* TH */}
                             <div className="mt-4 sm:mt-5 text-center">
-                                <div className="mx-auto max-w-[22ch] max-[380px]:max-w-[20ch] sm:max-w-[30ch]">
+                                <div className="mx-auto max-w-[24ch] sm:max-w-[30ch]">
                                     <QuotedText
                                         lines={thLines}
                                         className="
                       font-onest text-ddCocoa
                       text-[14px] sm:text-[18px]
                       leading-relaxed
-                      break-words
-                      [overflow-wrap:anywhere]
+                      text-balance
                     "
                                     />
                                 </div>
                             </div>
 
-                            {/* ✅ push right a bit on mobile */}
-                            <p className="mt-4 sm:mt-12 text-right font-mono text-ddInkBlue text-[16px] sm:text-[22px] pr-1 sm:pr-0">
+                            <p className="mt-4 sm:mt-12 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Nadia :)
                             </p>
                         </div>
