@@ -29,11 +29,11 @@ export const MESSAGES: Message[] = [
         th: ['ช่วงเวลาที่สว่างกว่ากำลังใกล้เข้ามากว่าที่คุณคิด']
     },
     {
-        en: ['It’s okay if today feels heavy.', 'You don’t have to fix it'],
+        en: ['It’s okay if today feels heavy. You don’t have to fix it'],
         th: ['ไม่เป็นไรถ้าวันนี้มันหนักหนา', 'คุณไม่จำเป็นต้องแก้ไขอะไร']
     },
     {
-        en: ['Someone cares about you,', 'even on the days you can’t feel it'],
+        en: ['Someone cares about you, even on the days you can’t feel it'],
         th: ['มีใครบางคนห่วงใยคุณ', 'แม้ในวันที่คุณไม่รู้สึกถึงมัน']
     },
     {

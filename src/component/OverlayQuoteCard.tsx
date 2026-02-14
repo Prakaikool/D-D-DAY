@@ -81,14 +81,7 @@ export default function OverlayQuoteCard({
               p-4 sm:p-8
             "
                     >
-                        <div
-                            className="
-                w-full max-w-[280px]
-                max-h-[78vh] sm:max-h-none
-                overflow-auto
-                rounded-xl
-              "
-                        >
+                        <div className="relative w-full max-w-[280px] sm:max-w-[420px] lg:max-w-[380px] overflow-auto rounded-xl lg:rounded-2xl">
                             <p className="font-mono text-ddInkBlue text-md sm:text-[18px]">
                                 Dear, You!
                             </p>
