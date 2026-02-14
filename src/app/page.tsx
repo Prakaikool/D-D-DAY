@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
 import QuoteBlock from '@/component/QuoteBlock';
 import OverlayQuoteCard from '@/component/OverlayQuoteCard';
-import About from '@/component/About'
+import About from '@/component/About';
 import Footer from '../component/Footer';
 
 function dayOfYearUTC(d: Date) {
@@ -93,7 +93,12 @@ export default function Home() {
                                 .getElementById('about')
                                 ?.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        className="font-mono text-xl tracking-[0.2em] text-ddSky hover:text-white"
+                        className="
+    font-mono text-xl tracking-[0.2em] text-ddSky
+    transition-all duration-300 ease-out
+    hover:text-white
+    hover:scale-110
+  "
                     >
                         ABOUT
                     </button>
@@ -216,7 +221,7 @@ export default function Home() {
                 onClose={closeOverlay}
             />
 
-            <About/>
+            <About />
             <Footer />
         </main>
     );
