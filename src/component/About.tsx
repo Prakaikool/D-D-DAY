@@ -134,6 +134,7 @@ export default function AboutSection() {
                     <p
                         className={[
                             'mt-5 sm:mt-8',
+                            'mb-4 sm:mt-4',
                             'px-0 sm:px-10',
                             'font-mono text-ddSky',
                             'text-md sm:text-lg lg:text-xl',
