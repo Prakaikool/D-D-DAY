@@ -3,9 +3,10 @@
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
-import Footer from './component/Footer';
-import QuoteBlock from '@/app/component/QuoteBlock';
-import OverlayQuoteCard from '@/app/component/OverlayQuoteCard';
+import QuoteBlock from '@/component/QuoteBlock';
+import OverlayQuoteCard from '@/component/OverlayQuoteCard';
+import About from '@/component/About'
+import Footer from '../component/Footer';
 
 function dayOfYearUTC(d: Date) {
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
@@ -86,13 +87,20 @@ export default function Home() {
                     <div className="font-mono text-2xl tracking-[0.25em] text-ddSky">
                         D-D-DAY
                     </div>
-                    <button className="font-mono text-xl tracking-[0.2em] text-ddSky hover:text-white">
+                    <button
+                        onClick={() => {
+                            document
+                                .getElementById('about')
+                                ?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="font-mono text-xl tracking-[0.2em] text-ddSky hover:text-white"
+                    >
                         ABOUT
                     </button>
                 </div>
 
                 {/* MAIN CARD */}
-                <div className="relative overflow-hidden rounded-b-3xl border-x-4 border-b-4 border-ddCocoa">
+                <div className="relative overflow-hidden rounded-b-3xl border-x-4 border-b-4 border-ddCocoa shadow-[0_14px_0_rgba(79,29,22,0.25)]">
                     {/* background gradient */}
                     <div className="absolute inset-0 bg-gradient-to-b from-ddSky via-[#EAF2FF] to-ddButter" />
 
@@ -115,7 +123,7 @@ export default function Home() {
                         alt=""
                         width={350}
                         height={350}
-                        className="pointer-events-none absolute -left-2 top-2 opacity-50"
+                        className="pointer-events-none absolute -left-2 top-2 opacity-50 animate-float"
                         priority
                     />
                     <Image
@@ -123,24 +131,24 @@ export default function Home() {
                         alt=""
                         width={120}
                         height={120}
-                        className="pointer-events-none absolute right-35 top-16 opacity-60"
+                        className="pointer-events-none absolute right-35 top-16 opacity-60 animate-float [animation-delay:0.6s]"
                     />
                     <Image
                         src="/decor/heart.png"
                         alt=""
                         width={120}
                         height={120}
-                        className="pointer-events-none absolute bottom-16 right-65 opacity-60"
+                        className="pointer-events-none absolute bottom-16 right-65 opacity-60 animate-float [animation-delay:1.2s]"
                     />
                     <Image
                         src="/decor/star.png"
                         alt=""
                         width={140}
                         height={140}
-                        className="pointer-events-none absolute bottom-14 left-90 opacity-70 rotate-12"
+                        className="pointer-events-none absolute bottom-14 left-90 opacity-70 rotate-12 animate-float [animation-delay:0.3s]"
                     />
 
-                    {/* CONTENT (fixed subtitle, no random quote here) */}
+                    {/* CONTENT */}
                     <QuoteBlock dateLabel={dateLabel} />
 
                     {/* button */}
@@ -148,22 +156,51 @@ export default function Home() {
                         <button
                             onClick={onClickRandom}
                             className="
-                relative
-                rounded-full border-2 border-ddCocoa bg-ddBlush
-                px-10 py-3
-                font-mono text-[22px] text-ddInkBlue
-                shadow-[0_8px_0_rgba(79,29,22,0.25)]
-                transition
-                hover:-translate-y-[1px]
-                hover:bg-ddInkBlue
-                hover:text-ddBlush
-                active:translate-y-[3px]
-                active:shadow-[0_5px_0_rgba(79,29,22,0.25)]
-              "
+      group
+      relative overflow-hidden
+      rounded-full border-2 border-ddInkBlue bg-ddBlush
+      px-10 py-3
+      font-mono text-[22px] text-ddInkBlue
+      shadow-[0_8px_0_rgba(79,29,22,0.25)]
+      transition-all duration-300
+      hover:-translate-y-[2px]
+      hover:bg-ddInkBlue
+      hover:text-ddBlush
+      active:translate-y-[3px]
+      active:shadow-[0_5px_0_rgba(79,29,22,0.25)]
+    "
                         >
-                            Click here!
+                            {/* ✨ shimmer effect */}
+                            <span
+                                className="
+      pointer-events-none
+      absolute inset-0
+      -translate-x-full
+      bg-gradient-to-r
+      from-transparent via-white/30 to-transparent
+      opacity-0
+      group-hover:opacity-100
+      group-hover:translate-x-full
+      transition duration-700
+    "
+                            />
+
+                            {/* ✨ text */}
+                            <span className="relative z-10">Click here!</span>
+
+                            {/* ✨ hover ring */}
+                            <span
+                                className="
+      pointer-events-none
+      absolute inset-0 rounded-full
+      ring-0 ring-ddInkBlue/30
+      transition-all duration-300
+      group-hover:ring-4
+    "
+                            />
                         </button>
                     </div>
+
                     <div className="absolute bottom-3 right-4 h-6 w-6 rounded-full border-3 border-ddCocoa bg-ddBlush">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
@@ -179,6 +216,7 @@ export default function Home() {
                 onClose={closeOverlay}
             />
 
+            <About/>
             <Footer />
         </main>
     );
