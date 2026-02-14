@@ -83,7 +83,7 @@ export default function OverlayQuoteCard({
                     >
                         <div
                             className="
-                w-full max-w-[300px]
+                w-full max-w-[280px]
                 max-h-[78vh] sm:max-h-none
                 overflow-auto
                 rounded-xl
