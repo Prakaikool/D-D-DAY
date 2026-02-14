@@ -37,7 +37,7 @@ export default function AboutSection() {
             {/* OUTER CARD */}
             <div
                 className={[
-                    'rounded-4xl bg-ddCocoa p-6 shadow-[0_14px_0_rgba(79,29,22,0.25)]',
+                    'rounded-4xl bg-ddCocoa p-4 sm:p-6 shadow-[0_14px_0_rgba(79,29,22,0.25)]',
                     'transition-all duration-300 hover:-translate-y-[2px] hover:shadow-[0_18px_0_rgba(79,29,22,0.28)]'
                 ].join(' ')}
             >
@@ -47,32 +47,35 @@ export default function AboutSection() {
             relative
             rounded-2xl
             bg-[#9B8632]
-            px-10 py-20
+            px-5 py-10
+            sm:px-10 sm:py-16
+            lg:px-12 lg:py-20
             shadow-[0_14px_0_rgba(79,29,22,0.35)]
             overflow-hidden
           "
                 >
                     {/* subtle highlight blob */}
-                    <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
+                    <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-white/10 blur-2xl" />
 
                     {/* DOTS */}
-                    <div className="pointer-events-none absolute top-3 left-3 h-6 w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft [animation-delay:0.1s]">
+                    <div className="pointer-events-none absolute top-3 left-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft [animation-delay:0.1s]">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
-                    <div className="pointer-events-none absolute top-3 right-3 h-6 w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotTiny [animation-delay:0.6s]">
+                    <div className="pointer-events-none absolute top-3 right-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotTiny [animation-delay:0.6s]">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
-                    <div className="pointer-events-none absolute bottom-3 left-3 h-6 w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotWiggle [animation-delay:0.3s]">
+                    <div className="pointer-events-none absolute bottom-3 left-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotWiggle [animation-delay:0.3s]">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
-                    <div className="pointer-events-none absolute bottom-3 right-3 h-6 w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft [animation-delay:1s]">
+                    <div className="pointer-events-none absolute bottom-3 right-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft [animation-delay:1s]">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
 
                     {/* stagger content */}
                     <h2
                         className={[
-                            'font-onest text-[58px] tracking-[0.18em] text-ddBlush text-center',
+                            'font-onest tracking-[0.18em] text-ddBlush text-center',
+                            'text-[34px] sm:text-[46px] lg:text-[58px]',
                             'transition-[opacity,transform] duration-500',
                             anim('0.25s')
                         ].join(' ')}
@@ -82,19 +85,26 @@ export default function AboutSection() {
 
                     <p
                         className={[
-                            'mt-12 px-10 font-mono text-xl text-ddSky',
+                            'mt-6 sm:mt-10',
+                            'px-0 sm:px-10',
+                            'font-mono text-ddSky',
+                            'text-sm sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.40s')
                         ].join(' ')}
                     >
                         If you are someone who received the link to this page,
-                        <br />I want you to know that... You are one of the
-                        people Nadia holds close and dear.
+                        <br className="hidden sm:block" />I want you to know
+                        that... You are one of the people Nadia holds close and
+                        dear.
                     </p>
 
                     <p
                         className={[
-                            'mt-8 px-10 font-mono text-xl text-ddSky',
+                            'mt-5 sm:mt-8',
+                            'px-0 sm:px-10',
+                            'font-mono text-ddSky',
+                            'text-sm sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.55s')
                         ].join(' ')}
@@ -108,7 +118,10 @@ export default function AboutSection() {
 
                     <p
                         className={[
-                            'mt-8 px-10 pb-6 font-mono text-xl text-ddSky',
+                            'mt-5 sm:mt-8',
+                            'px-0 sm:px-10',
+                            'font-mono text-ddSky',
+                            'text-sm sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.70s')
                         ].join(' ')}
@@ -120,7 +133,10 @@ export default function AboutSection() {
 
                     <p
                         className={[
-                            'mt-8 px-10 pb-6 font-mono text-xl text-ddSky',
+                            'mt-5 sm:mt-8',
+                            'px-0 sm:px-10',
+                            'font-mono text-ddSky',
+                            'text-sm sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.85s')
                         ].join(' ')}
@@ -130,7 +146,14 @@ export default function AboutSection() {
                             href="https://www.prakaikool-teepraken.com/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block font-mono text-xl font-bold tracking-[0.2em] text-ddBlush transition-all duration-300 hover:text-ddCocoa hover:scale-110"
+                            className="
+                inline-block
+                font-mono font-bold tracking-[0.2em]
+                text-ddBlush
+                text-sm sm:text-lg lg:text-xl
+                transition-all duration-300
+                hover:text-ddCocoa hover:scale-110
+              "
                         >
                             PORTFOLIO
                         </a>

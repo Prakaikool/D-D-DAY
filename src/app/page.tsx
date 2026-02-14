@@ -38,7 +38,6 @@ export default function Home() {
 
     const dateLabel = useMemo(() => formatDate(new Date()), []);
 
-    // overlay
     const [isOpen, setIsOpen] = useState(false);
     const [bgSrc, setBgSrc] = useState<(typeof CARD_BACKGROUNDS)[number]>(
         CARD_BACKGROUNDS[0]
@@ -49,7 +48,6 @@ export default function Home() {
     }
 
     function onClickRandom() {
-        // random message (avoid same)
         setIndex((prev) => {
             if (MESSAGES.length <= 1) return prev;
             let next = prev;
@@ -58,18 +56,15 @@ export default function Home() {
             return next;
         });
 
-        // random overlay background
         const nextBg =
             CARD_BACKGROUNDS[
                 Math.floor(Math.random() * CARD_BACKGROUNDS.length)
             ];
         setBgSrc(nextBg);
 
-        // open overlay
         setIsOpen(true);
     }
 
-    // ESC close
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
             if (e.key === 'Escape') closeOverlay();
@@ -81,24 +76,24 @@ export default function Home() {
     return (
         <main className="min-h-screen bg-ddBlush font-onest text-ddCocoa">
             {/* OUTER FRAME */}
-            <div className="mx-auto max-w-[1400px] px-6 pt-12 pb-12">
+            <div className="mx-auto max-w-[1400px] px-4 sm:px-6 pt-6 sm:pt-12 pb-8 sm:pb-12">
                 {/* TOP BAR */}
-                <div className="flex items-center justify-between border-2 border-ddCocoa bg-ddCocoa px-6 py-4">
-                    <div className="font-mono text-2xl tracking-[0.25em] text-ddSky">
+                <div className="flex items-center justify-between border-2 border-ddCocoa bg-ddCocoa px-4 sm:px-6 py-3 sm:py-4">
+                    <div className="font-mono text-lg sm:text-2xl tracking-[0.25em] text-ddSky">
                         D-D-DAY
                     </div>
+
                     <button
                         onClick={() => {
-                            document
-                                .getElementById('about')
-                                ?.scrollIntoView({ behavior: 'smooth' });
+                            document.getElementById('about')?.scrollIntoView({
+                                behavior: 'smooth'
+                            });
                         }}
                         className="
-    font-mono text-xl tracking-[0.2em] text-ddSky
-    transition-all duration-300 ease-out
-    hover:text-white
-    hover:scale-110
-  "
+              font-mono text-base sm:text-xl tracking-[0.2em] text-ddSky
+              transition-all duration-300 ease-out
+              hover:text-white hover:scale-110
+            "
                     >
                         ABOUT
                     </button>
@@ -114,21 +109,21 @@ export default function Home() {
                         className="pointer-events-none absolute inset-0"
                         style={{
                             backgroundImage: `
-                linear-gradient(to right, rgba(247,191,204,0.55) 2.5px, transparent 2px),
-                linear-gradient(to bottom, rgba(247,191,204,0.55) 2.5px, transparent 2px)
+                linear-gradient(to right, rgba(247,191,204,0.55) 2px, transparent 2px),
+                linear-gradient(to bottom, rgba(247,191,204,0.55) 2px, transparent 2px)
               `,
-                            backgroundSize: '72px 72px',
+                            backgroundSize: '56px 56px',
                             opacity: 0.55
                         }}
                     />
 
-                    {/* DECOR */}
+                    {/* DECOR (responsive positioning) */}
                     <Image
                         src="/decor/rainbow.png"
                         alt=""
                         width={350}
                         height={350}
-                        className="pointer-events-none absolute -left-2 top-2 opacity-50 animate-float"
+                        className="pointer-events-none absolute -left-10 sm:-left-2 top-2 opacity-40 sm:opacity-50 animate-float w-[220px] sm:w-[350px] h-auto"
                         priority
                     />
                     <Image
@@ -136,83 +131,73 @@ export default function Home() {
                         alt=""
                         width={120}
                         height={120}
-                        className="pointer-events-none absolute right-35 top-16 opacity-60 animate-float [animation-delay:0.6s]"
+                        className="pointer-events-none absolute right-6 sm:right-20 top-10 sm:top-16 opacity-50 sm:opacity-60 animate-float [animation-delay:0.6s] w-[80px] sm:w-[120px] h-auto"
                     />
                     <Image
                         src="/decor/heart.png"
                         alt=""
                         width={120}
                         height={120}
-                        className="pointer-events-none absolute bottom-16 right-65 opacity-60 animate-float [animation-delay:1.2s]"
+                        className="pointer-events-none absolute bottom-24 sm:bottom-16 right-10 sm:right-44 opacity-50 sm:opacity-60 animate-float [animation-delay:1.2s] w-[80px] sm:w-[120px] h-auto"
                     />
                     <Image
                         src="/decor/star.png"
                         alt=""
                         width={140}
                         height={140}
-                        className="pointer-events-none absolute bottom-14 left-90 opacity-70 rotate-12 animate-float [animation-delay:0.3s]"
+                        className="pointer-events-none absolute bottom-20 sm:bottom-14 left-8 sm:left-24 opacity-60 sm:opacity-70 rotate-12 animate-float [animation-delay:0.3s] w-[90px] sm:w-[140px] h-auto"
                     />
 
                     {/* CONTENT */}
                     <QuoteBlock dateLabel={dateLabel} />
 
                     {/* button */}
-                    <div className="relative -mt-28 pb-16 flex justify-center">
+                    <div className="relative -mt-16 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
                         <button
                             onClick={onClickRandom}
                             className="
-      group
-      relative overflow-hidden
-      rounded-full border-2 border-ddInkBlue bg-ddBlush
-      px-10 py-3
-      font-mono text-[22px] text-ddInkBlue
-      shadow-[0_8px_0_rgba(79,29,22,0.25)]
-      transition-all duration-300
-      hover:-translate-y-[2px]
-      hover:bg-ddInkBlue
-      hover:text-ddBlush
-      active:translate-y-[3px]
-      active:shadow-[0_5px_0_rgba(79,29,22,0.25)]
-    "
+                group relative overflow-hidden
+                rounded-full border-2 border-ddInkBlue bg-ddBlush
+                px-8 sm:px-10 py-3
+                font-mono text-[18px] sm:text-[22px] text-ddInkBlue
+                shadow-[0_8px_0_rgba(79,29,22,0.25)]
+                transition-all duration-300
+                hover:-translate-y-[2px]
+                hover:bg-ddInkBlue hover:text-ddBlush
+                active:translate-y-[3px]
+                active:shadow-[0_5px_0_rgba(79,29,22,0.25)]
+              "
                         >
-                            {/* ✨ shimmer effect */}
                             <span
                                 className="
-      pointer-events-none
-      absolute inset-0
-      -translate-x-full
-      bg-gradient-to-r
-      from-transparent via-white/30 to-transparent
-      opacity-0
-      group-hover:opacity-100
-      group-hover:translate-x-full
-      transition duration-700
-    "
+                  pointer-events-none absolute inset-0
+                  -translate-x-full
+                  bg-gradient-to-r from-transparent via-white/30 to-transparent
+                  opacity-0
+                  group-hover:opacity-100 group-hover:translate-x-full
+                  transition duration-700
+                "
                             />
-
-                            {/* ✨ text */}
                             <span className="relative z-10">Click here!</span>
-
-                            {/* ✨ hover ring */}
                             <span
                                 className="
-      pointer-events-none
-      absolute inset-0 rounded-full
-      ring-0 ring-ddInkBlue/30
-      transition-all duration-300
-      group-hover:ring-4
-    "
+                  pointer-events-none absolute inset-0 rounded-full
+                  ring-0 ring-ddInkBlue/30
+                  transition-all duration-300
+                  group-hover:ring-4
+                "
                             />
                         </button>
                     </div>
 
-                    <div className="absolute bottom-3 right-4 h-6 w-6 rounded-full border-3 border-ddCocoa bg-ddBlush">
+                    {/* corner dot */}
+                    <div className="absolute bottom-3 right-4 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
                 </div>
             </div>
 
-            {/* OVERLAY CARD (random quote appears here) */}
+            {/* OVERLAY CARD */}
             <OverlayQuoteCard
                 isOpen={isOpen}
                 bgSrc={bgSrc}
