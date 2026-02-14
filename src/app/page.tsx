@@ -76,7 +76,7 @@ export default function Home() {
     return (
         <main className="min-h-screen bg-ddBlush font-onest text-ddCocoa">
             {/* OUTER FRAME */}
-            <div className="mx-auto max-w-[1400px] px-4 sm:px-6 pt-6 sm:pt-12 pb-8 sm:pb-12">
+            <div className="mx-auto max-w-[1400px] px-6 pb-14">
                 {/* TOP BAR */}
                 <div className="flex items-center justify-between border-2 border-ddCocoa bg-ddCocoa px-4 sm:px-6 py-3 sm:py-4">
                     <div className="font-mono text-lg sm:text-2xl tracking-[0.25em] text-ddSky">
