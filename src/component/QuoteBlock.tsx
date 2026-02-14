@@ -20,7 +20,7 @@ export default function QuoteBlock({
           mt-8 sm:mt-14
           text-center
           font-onest font-semibold leading-tight text-ddCocoa
-          text-[30px] sm:text-[40px] lg:text-[44px]
+          text-[34px] sm:text-[46px] lg:text-[58px]
           animate-slideDownFade [animation-delay:0.08s]
         "
             >

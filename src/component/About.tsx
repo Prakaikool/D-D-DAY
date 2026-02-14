@@ -88,7 +88,7 @@ export default function AboutSection() {
                             'mt-6 sm:mt-10',
                             'px-0 sm:px-10',
                             'font-mono text-ddSky',
-                            'text-sm sm:text-lg lg:text-xl',
+                            'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.40s')
                         ].join(' ')}
@@ -104,7 +104,7 @@ export default function AboutSection() {
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
                             'font-mono text-ddSky',
-                            'text-sm sm:text-lg lg:text-xl',
+                            'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.55s')
                         ].join(' ')}
@@ -121,7 +121,7 @@ export default function AboutSection() {
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
                             'font-mono text-ddSky',
-                            'text-sm sm:text-lg lg:text-xl',
+                            'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.70s')
                         ].join(' ')}
@@ -136,7 +136,7 @@ export default function AboutSection() {
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
                             'font-mono text-ddSky',
-                            'text-sm sm:text-lg lg:text-xl',
+                            'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.85s')
                         ].join(' ')}
@@ -150,7 +150,7 @@ export default function AboutSection() {
                 inline-block
                 font-mono font-bold tracking-[0.2em]
                 text-ddBlush
-                text-sm sm:text-lg lg:text-xl
+                text-md sm:text-lg lg:text-xl
                 transition-all duration-300
                 hover:text-ddCocoa hover:scale-110
               "
