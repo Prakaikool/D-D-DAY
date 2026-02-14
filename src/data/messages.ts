@@ -244,7 +244,7 @@ export const MESSAGES: Message[] = [
         th: ['วันดีๆเริ่มต้นได้ที่ตัวคุณ']
     },
     {
-        en: ['If all you did today was breathe—', 'that’s still something'],
+        en: ['If all you did today was breathe', 'that’s still something'],
         th: ['หากวันนี้สิ่งเดียวที่คุณทำได้คือการหายใจ', 'นั่นก็เก่งมากแล้ว']
     }
 ];
