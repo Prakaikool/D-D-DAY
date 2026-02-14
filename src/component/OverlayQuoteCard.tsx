@@ -22,7 +22,7 @@ export default function OverlayQuoteCard({
             className="
         fixed inset-0 z-50
         flex items-center justify-center
-        bg-ddInkBlue/25
+        bg-ddInkBlue
         p-3 sm:p-4
       "
             role="dialog"
@@ -57,8 +57,6 @@ export default function OverlayQuoteCard({
                 <div
                     className="
             relative w-full overflow-hidden
-            rounded-2xl sm:rounded-3xl
-            shadow-[0_20px_60px_rgba(0,0,0,0.25)]
             aspect-[4/5] sm:aspect-square
           "
                 >
@@ -80,7 +78,7 @@ export default function OverlayQuoteCard({
                 rounded-xl
               "
                         >
-                            <p className="text-center font-mono text-ddInkBlue text-sm sm:text-[18px]">
+                            <p className="font-mono text-ddInkBlue text-sm sm:text-[18px]">
                                 Dear, You!
                             </p>
 
@@ -121,11 +119,6 @@ export default function OverlayQuoteCard({
                     </div>
                 </div>
 
-                {/* Hint (responsive) */}
-                <p className="mt-3 text-center font-mono text-[10px] sm:text-xs text-white/80">
-                    Tip: Press <span className="font-semibold">ESC</span> to
-                    close
-                </p>
             </div>
         </div>
     );
