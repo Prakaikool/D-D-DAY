@@ -30,6 +30,17 @@ export default function OverlayQuoteCard({
             onMouseDown={onClose}
         >
             <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                    backgroundImage: `
+                linear-gradient(to right, rgba(247,191,204,0.35) 2px, transparent 2px),
+                linear-gradient(to bottom, rgba(247,191,204,0.35) 2px, transparent 2px)
+      `,
+                    backgroundSize: '56px 56px',
+                    opacity: 0.25
+                }}
+            />
+            <div
                 className="
           relative w-full
           max-w-[520px] sm:max-w-[650px]
@@ -118,7 +129,6 @@ export default function OverlayQuoteCard({
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     );
