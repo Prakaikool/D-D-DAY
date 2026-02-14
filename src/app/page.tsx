@@ -21,6 +21,17 @@ function formatDate(d: Date) {
     return `${dd}/${mm}-${yy}`;
 }
 
+// ✅ key สำหรับ “วันนี้” (local time)
+function getTodayKey() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+}
+
+const STORAGE_KEY = 'ddday_daily_random_v1';
+
 const CARD_BACKGROUNDS = [
     '/background/card-pink.png',
     '/background/card-blue.png',
@@ -47,21 +58,96 @@ export default function Home() {
         setIsOpen(false);
     }
 
-    function onClickRandom() {
-        setIndex((prev) => {
-            if (MESSAGES.length <= 1) return prev;
-            let next = prev;
-            while (next === prev)
-                next = Math.floor(Math.random() * MESSAGES.length);
-            return next;
-        });
+    // ✅ อ่าน/เขียน localStorage แบบปลอดภัย
+    function readDailyState(): { dateKey: string; used: number[] } {
+        const todayKey = getTodayKey();
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return { dateKey: todayKey, used: [] };
 
+            const parsed = JSON.parse(raw) as {
+                dateKey?: string;
+                used?: number[];
+            };
+            const dateKey =
+                typeof parsed.dateKey === 'string' ? parsed.dateKey : todayKey;
+            const used = Array.isArray(parsed.used)
+                ? parsed.used.filter(Number.isFinite)
+                : [];
+
+            // ถ้าวันเปลี่ยน → รีเซ็ต
+            if (dateKey !== todayKey) return { dateKey: todayKey, used: [] };
+
+            return { dateKey, used };
+        } catch {
+            return { dateKey: todayKey, used: [] };
+        }
+    }
+
+    function writeDailyState(state: { dateKey: string; used: number[] }) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch {
+            // ignore
+        }
+    }
+
+    // ✅ สุ่มแบบไม่ซ้ำ “ภายในวันเดียวกัน”
+    function pickNextIndexNoRepeatToday(prevIndex: number) {
+        const total = MESSAGES.length;
+        if (total <= 1) return prevIndex;
+
+        const state = readDailyState();
+
+        // กันกรณี index หลุดช่วง
+        const usedSet = new Set(state.used.filter((n) => n >= 0 && n < total));
+
+        // อยากกันไม่ให้ซ้ำกับอันเดิมทันทีด้วย
+        usedSet.add(prevIndex);
+
+        // หา candidates ที่ยังไม่เคยใช้ในวันนี้
+        let candidates: number[] = [];
+        for (let i = 0; i < total; i++) {
+            if (!usedSet.has(i)) candidates.push(i);
+        }
+
+        // ถ้าใช้ครบแล้ว → รีเซ็ตของวันนี้ (เริ่มใหม่)
+        if (candidates.length === 0) {
+            // รีเซ็ต แล้วให้สุ่มได้ทุกอัน (แต่ยังกัน prevIndex)
+            const resetUsed = [prevIndex];
+            candidates = [];
+            for (let i = 0; i < total; i++) {
+                if (!resetUsed.includes(i)) candidates.push(i);
+            }
+            const next =
+                candidates[Math.floor(Math.random() * candidates.length)];
+            writeDailyState({
+                dateKey: state.dateKey,
+                used: [prevIndex, next]
+            });
+            return next;
+        }
+
+        const next = candidates[Math.floor(Math.random() * candidates.length)];
+        writeDailyState({
+            dateKey: state.dateKey,
+            used: [...Array.from(usedSet), next]
+        });
+        return next;
+    }
+
+    function onClickRandom() {
+        // ✅ random message แบบไม่ซ้ำในวันเดียวกัน
+        setIndex((prev) => pickNextIndexNoRepeatToday(prev));
+
+        // random overlay background
         const nextBg =
             CARD_BACKGROUNDS[
                 Math.floor(Math.random() * CARD_BACKGROUNDS.length)
             ];
         setBgSrc(nextBg);
 
+        // open overlay
         setIsOpen(true);
     }
 
@@ -117,7 +203,7 @@ export default function Home() {
                         }}
                     />
 
-                    {/* DECOR (responsive positioning) */}
+                    {/* DECOR */}
                     <Image
                         src="/decor/rainbow.png"
                         alt=""
@@ -152,7 +238,7 @@ export default function Home() {
                     <QuoteBlock dateLabel={dateLabel} />
 
                     {/* button */}
-                    <div className="relative -mt-22 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
+                    <div className="relative -mt-32 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
                         <button
                             onClick={onClickRandom}
                             className="

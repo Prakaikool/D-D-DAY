@@ -17,7 +17,7 @@ export default function QuoteBlock({
             {/* title */}
             <h1
                 className="
-          mt-8 sm:mt-14
+          mt-20 sm:mt-14
           text-center
           font-onest font-semibold leading-tight text-ddCocoa
           text-[34px] sm:text-[46px] lg:text-[58px]
@@ -30,7 +30,7 @@ export default function QuoteBlock({
             {/* subtitle */}
             <div
                 className="
-          mt-6 sm:mt-10
+          mt-10 sm:mt-10
           text-center
           font-mono leading-relaxed text-ddInkBlue
           text-md sm:text-xl
