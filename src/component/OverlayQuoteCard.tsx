@@ -83,13 +83,13 @@ export default function OverlayQuoteCard({
                     >
                         <div
                             className="
-                w-full max-w-[400px]
+                w-full max-w-[420px]
                 max-h-[78vh] sm:max-h-none
                 overflow-auto
                 rounded-xl
               "
                         >
-                            <p className="font-mono text-ddInkBlue text-sm sm:text-[16px]">
+                            <p className="font-mono text-ddInkBlue text-sm sm:text-[18px]">
                                 Dear, You!
                             </p>
 
@@ -99,7 +99,7 @@ export default function OverlayQuoteCard({
                                         key={`overlay-en-${i}`}
                                         className="
                       font-mono text-ddCocoa
-                      text-[14px] sm:text-[22px]
+                      text-[16px] sm:text-[22px]
                       leading-snug
                     "
                                     >
