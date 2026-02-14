@@ -58,16 +58,16 @@ export default function AboutSection() {
                     <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-white/10 blur-2xl" />
 
                     {/* DOTS */}
-                    <div className="pointer-events-none absolute top-3 left-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft [animation-delay:0.1s]">
+                    <div className="pointer-events-none absolute top-3 left-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
-                    <div className="pointer-events-none absolute top-3 right-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotTiny [animation-delay:0.6s]">
+                    <div className="pointer-events-none absolute top-3 right-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotTiny">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
-                    <div className="pointer-events-none absolute bottom-3 left-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotWiggle [animation-delay:0.3s]">
+                    <div className="pointer-events-none absolute bottom-3 left-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotWiggle">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
-                    <div className="pointer-events-none absolute bottom-3 right-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft [animation-delay:1s]">
+                    <div className="pointer-events-none absolute bottom-3 right-3 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush animate-dotSoft">
                         <div className="absolute inset-1 rounded-full bg-white/30" />
                     </div>
 
