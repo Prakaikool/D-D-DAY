@@ -82,7 +82,7 @@ export default function OverlayQuoteCard({
             "
                     >
                         <div className="relative w-full max-w-[280px] sm:max-w-[420px] lg:max-w-[380px] overflow-auto rounded-xl lg:rounded-2xl">
-                            <p className="font-mono text-ddInkBlue text-md sm:text-[18px]">
+                            <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Dear, You!
                             </p>
 
@@ -116,7 +116,7 @@ export default function OverlayQuoteCard({
                                 ))}
                             </div>
 
-                            <p className="mt-5 sm:mt-8 text-right font-mono text-ddInkBlue text-md sm:text-[18px]">
+                            <p className="mt-5 sm:mt-8 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Nadia :)
                             </p>
                         </div>
