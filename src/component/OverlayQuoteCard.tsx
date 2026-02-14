@@ -120,7 +120,17 @@ export default function OverlayQuoteCard({
               p-4 sm:p-8
             "
                     >
-                        <div className="relative w-full max-w-[280px] sm:max-w-[420px] lg:max-w-[380px] overflow-auto rounded-xl lg:rounded-2xl">
+                        <div
+                            className="
+    relative w-full
+    max-w-[min(86vw,320px)]    /* ✅ mobile (Flip) จะไม่เกินจอ */
+    sm:max-w-[420px]
+    lg:max-w-[380px]
+    overflow-auto
+    rounded-xl lg:rounded-2xl
+    px-2 sm:px-0              /* ✅ กันข้อความชนขอบในจอแคบ */
+  "
+                        >
                             <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Dear, You!
                             </p>
