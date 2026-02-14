@@ -126,7 +126,7 @@ export default function OverlayQuoteCard({
                             </p>
 
                             {/* EN */}
-                            <div className="mt-12 text-center">
+                            <div className="mt-4 sm:mt-12 text-center">
                                 <div className="mx-auto max-w-[26ch] sm:max-w-[32ch]">
                                     <QuotedText
                                         lines={enLines}
@@ -155,7 +155,7 @@ export default function OverlayQuoteCard({
                                 </div>
                             </div>
 
-                            <p className="mt-6 sm:mt-12 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
+                            <p className="mt-4 sm:mt-12 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Nadia :)
                             </p>
                         </div>
