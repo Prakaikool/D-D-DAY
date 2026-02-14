@@ -8,6 +8,35 @@ type OverlayQuoteCardProps = {
     onClose: () => void;
 };
 
+function QuotedText({
+    lines,
+    className
+}: {
+    lines: string[];
+    className: string;
+}) {
+    // ✅ If lines are provided (1-2 lines), we keep them.
+    // But we still make wrapping look nicer with text-balance and a max width.
+    const hasMultiple = lines.length > 1;
+
+    return (
+        <p className={className}>
+            “
+            {hasMultiple ? (
+                lines.map((line, i) => (
+                    <span key={i}>
+                        {line}
+                        {i < lines.length - 1 && <br />}
+                    </span>
+                ))
+            ) : (
+                <span>{lines[0] ?? ''}</span>
+            )}
+            ”
+        </p>
+    );
+}
+
 export default function OverlayQuoteCard({
     isOpen,
     bgSrc,
@@ -29,17 +58,19 @@ export default function OverlayQuoteCard({
             aria-modal="true"
             onMouseDown={onClose}
         >
+            {/* grid overlay */}
             <div
                 className="pointer-events-none absolute inset-0"
                 style={{
                     backgroundImage: `
                 linear-gradient(to right, rgba(247,191,204,0.35) 2px, transparent 2px),
                 linear-gradient(to bottom, rgba(247,191,204,0.35) 2px, transparent 2px)
-      `,
+              `,
                     backgroundSize: '56px 56px',
                     opacity: 0.25
                 }}
             />
+
             <div
                 className="
           relative w-full
@@ -47,7 +78,7 @@ export default function OverlayQuoteCard({
         "
                 onMouseDown={(e) => e.stopPropagation()}
             >
-                {/* Close (always clickable) */}
+                {/* Close */}
                 <button
                     type="button"
                     onClick={onClose}
@@ -71,9 +102,17 @@ export default function OverlayQuoteCard({
             aspect-[4/5] sm:aspect-square
           "
                 >
-                    <Image src={bgSrc} alt="" fill className="object-contain" />
+                    {/* background image */}
+                    <Image
+                        src={bgSrc}
+                        alt=""
+                        fill
+                        className="object-contain"
+                        // optional: helps avoid heavy caching while dev
+                        // unoptimized
+                    />
 
-                    {/* Content wrapper: scroll if needed on small screens */}
+                    {/* Content */}
                     <div
                         className="
               absolute inset-0
@@ -86,37 +125,37 @@ export default function OverlayQuoteCard({
                                 Dear, You!
                             </p>
 
-                            <div className="mt-4 sm:mt-6 space-y-2 text-center">
-                                {enLines.map((line, i) => (
-                                    <p
-                                        key={`overlay-en-${i}`}
+                            {/* EN */}
+                            <div className="mt-12 text-center">
+                                <div className="mx-auto max-w-[26ch] sm:max-w-[32ch]">
+                                    <QuotedText
+                                        lines={enLines}
                                         className="
                       font-mono text-ddCocoa
                       text-[16px] sm:text-[22px]
-                      leading-snug
+                      leading-relaxed
+                      text-balance
                     "
-                                    >
-                                        “{line}”
-                                    </p>
-                                ))}
+                                    />
+                                </div>
                             </div>
 
-                            <div className="mt-3 sm:mt-5 space-y-1 text-center">
-                                {thLines.map((line, i) => (
-                                    <p
-                                        key={`overlay-th-${i}`}
+                            {/* TH */}
+                            <div className="mt-4 sm:mt-5 text-center">
+                                <div className="mx-auto max-w-[24ch] sm:max-w-[30ch]">
+                                    <QuotedText
+                                        lines={thLines}
                                         className="
                       font-onest text-ddCocoa
                       text-[14px] sm:text-[18px]
-                      leading-snug
+                      leading-relaxed
+                      text-balance
                     "
-                                    >
-                                        “{line}”
-                                    </p>
-                                ))}
+                                    />
+                                </div>
                             </div>
 
-                            <p className="mt-5 sm:mt-8 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
+                            <p className="mt-6 sm:mt-12 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Nadia :)
                             </p>
                         </div>

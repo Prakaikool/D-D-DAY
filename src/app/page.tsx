@@ -21,7 +21,6 @@ function formatDate(d: Date) {
     return `${dd}/${mm}-${yy}`;
 }
 
-// ✅ key สำหรับ “วันนี้” (local time)
 function getTodayKey() {
     const d = new Date();
     const y = d.getFullYear();
@@ -58,7 +57,6 @@ export default function Home() {
         setIsOpen(false);
     }
 
-    // ✅ อ่าน/เขียน localStorage แบบปลอดภัย
     function readDailyState(): { dateKey: string; used: number[] } {
         const todayKey = getTodayKey();
         try {
@@ -137,7 +135,6 @@ export default function Home() {
     }
 
     function onClickRandom() {
-        // ✅ random message แบบไม่ซ้ำในวันเดียวกัน
         setIndex((prev) => pickNextIndexNoRepeatToday(prev));
 
         // random overlay background
