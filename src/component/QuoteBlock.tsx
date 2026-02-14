@@ -8,7 +8,7 @@ export default function QuoteBlock({
     dateLabel
 }: QuoteBlockProps) {
     return (
-        <div className="relative min-h-[620px] sm:min-h-[520px] px-6 py-8 sm:px-10 sm:py-10">
+        <div className="relative min-h-[640px] sm:min-h-[520px] px-6 py-8 sm:px-10 sm:py-10">
             {/* date */}
             <div className="font-mono text-md sm:text-xl text-ddInkBlue animate-slideDownFade">
                 {dateLabel}
