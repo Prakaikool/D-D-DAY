@@ -9,7 +9,9 @@ export default function Footer({ text = 'Prakaikool © 2026', className = '' }: 
             <div className="mx-auto max-w-full">
                 <div className=" bg-ddSky px-12 py-4">
                     <p className="font-mono text-xl text-ddCocoa">{text}</p>
+
                 </div>
+                
             </div>
         </footer>
     );
