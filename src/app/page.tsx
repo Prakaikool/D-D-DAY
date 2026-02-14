@@ -152,7 +152,7 @@ export default function Home() {
                     <QuoteBlock dateLabel={dateLabel} />
 
                     {/* button */}
-                    <div className="relative -mt-16 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
+                    <div className="relative -mt-22 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
                         <button
                             onClick={onClickRandom}
                             className="
