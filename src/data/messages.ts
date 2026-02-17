@@ -246,5 +246,9 @@ export const MESSAGES: Message[] = [
     {
         en: ['If all you did today was breathe', 'that’s still something'],
         th: ['หากวันนี้สิ่งเดียวที่คุณทำได้คือการหายใจ', 'นั่นก็เก่งมากแล้ว']
+    },
+    {
+        en: ['It’s hard', 'but atleast we have eatch other.'],
+        th: ['ถึงแม้ว่ามันจะยาก', 'แต่อย่างน้อยเราก็มีกันและกัน']
     }
 ];
