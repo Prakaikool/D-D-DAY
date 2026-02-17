@@ -46,7 +46,7 @@ export default function AboutSection() {
                     className="
             relative
             rounded-2xl
-            bg-[#9B8632]
+            bg-ddButter
             px-5 py-10
             sm:px-10 sm:py-16
             lg:px-12 lg:py-20
@@ -74,7 +74,7 @@ export default function AboutSection() {
                     {/* stagger content */}
                     <h2
                         className={[
-                            'font-onest tracking-[0.18em] text-ddBlush text-center',
+                            'font-onest tracking-[0.18em] text-ddCocoa text-center font-extrabold',
                             'text-[34px] sm:text-[46px] lg:text-[58px]',
                             'transition-[opacity,transform] duration-500',
                             anim('0.25s')
@@ -87,7 +87,7 @@ export default function AboutSection() {
                         className={[
                             'mt-6 sm:mt-10',
                             'px-0 sm:px-10',
-                            'font-mono text-ddSky',
+                            'font-mono text-ddInkBlue',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.40s')
@@ -103,7 +103,7 @@ export default function AboutSection() {
                         className={[
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
-                            'font-mono text-ddSky',
+                            'font-mono text-ddInkBlue',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.55s')
@@ -120,7 +120,7 @@ export default function AboutSection() {
                         className={[
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
-                            'font-mono text-ddSky',
+                            'font-mono text-ddInkBlue',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.70s')
@@ -136,7 +136,7 @@ export default function AboutSection() {
                             'mt-5 sm:mt-8',
                             'mb-4 sm:mt-4',
                             'px-0 sm:px-10',
-                            'font-mono text-ddSky',
+                            'font-mono text-ddInkBlue',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.85s')
@@ -150,10 +150,10 @@ export default function AboutSection() {
                             className="
                 inline-block
                 font-mono font-bold tracking-[0.2em]
-                text-ddBlush
+                text-ddCocoa
                 text-md sm:text-lg lg:text-xl
                 transition-all duration-300
-                hover:text-ddCocoa hover:scale-110
+                hover:text-ddBlush hover:scale-110
               "
                         >
                             PORTFOLIO
