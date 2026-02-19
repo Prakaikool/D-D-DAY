@@ -22,7 +22,7 @@ export const MESSAGES: Message[] = [
     },
     {
         en: ['A little light will find you today'],
-        th: ['แล้วแสงสว่างเนั้น จะหาคุณจนเจอ']
+        th: ['แล้วแสงสว่างนั้น จะหาคุณจนเจอ']
     },
     {
         en: ['A brighter moment is closer than you think'],
@@ -250,5 +250,9 @@ export const MESSAGES: Message[] = [
     {
         en: ['It’s hard', 'but atleast we have eatch other.'],
         th: ['ถึงแม้ว่ามันจะยาก', 'แต่อย่างน้อยเราก็มีกันและกัน']
+    },
+    {
+        en: ['Taking each day as it comes'],
+        th: ['ถึงแม้ว่ามันจะยาก']
     }
 ];
