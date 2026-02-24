@@ -246,7 +246,7 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                     {/* button */}
                     <ScrollReveal
                         animationClass="animate-slideInUp"
-                        delayClass="anim-delay-200"
+                        delayClass="anim-delay-600"
                     >
                         <div className="relative -mt-32 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
                             <button

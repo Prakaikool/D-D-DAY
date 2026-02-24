@@ -24,7 +24,7 @@ export default function QuoteBlock({
             {/* title */}
             <ScrollReveal
                 animationClass="animate-slideInDown"
-                delayClass="anim-delay-500"
+                delayClass="anim-delay-600"
             >
                 <h1
                     className="
@@ -42,7 +42,7 @@ export default function QuoteBlock({
             {/* subtitle */}
             <ScrollReveal
                 animationClass="animate-slideInUp"
-                delayClass="anim-delay-500"
+                delayClass="anim-delay-600"
             >
                 <div
                     className="

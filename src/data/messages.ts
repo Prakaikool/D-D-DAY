@@ -254,5 +254,9 @@ export const MESSAGES: Message[] = [
     {
         en: ['Taking each day as it comes'],
         th: ['ถึงแม้ว่ามันจะยาก']
+    },
+    {
+        en: [''],
+        th: ['']
     }
 ];

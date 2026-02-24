@@ -163,8 +163,8 @@ export default function AboutSection() {
                         </p>
                     </ScrollReveal>
                     <ScrollReveal
-                        animationClass="animate-slideInUp"
-                        delayClass="anim-delay-800"
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-900"
                     >
                         <p
                             className={[
