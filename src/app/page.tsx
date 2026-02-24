@@ -90,7 +90,7 @@ export default function Home() {
         }
     }
 
-    // ✅ สุ่มแบบไม่ซ้ำ “ภายในวันเดียวกัน”
+    // สุ่มแบบไม่ซ้ำ “ภายในวันเดียวกัน”
     function pickNextIndexNoRepeatToday(prevIndex: number) {
         const total = MESSAGES.length;
         if (total <= 1) return prevIndex;

@@ -46,7 +46,7 @@ export default function AboutSection() {
                     className="
             relative
             rounded-2xl
-            bg-ddButter
+           bg-gradient-to-b from-ddSky via-[#EAF2FF] to-ddButter
             px-5 py-10
             sm:px-10 sm:py-16
             lg:px-12 lg:py-20
@@ -54,6 +54,17 @@ export default function AboutSection() {
             overflow-hidden
           "
                 >
+                    <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                            backgroundImage: `
+                linear-gradient(to right, rgba(247,191,204,0.55) 2px, transparent 2px),
+                linear-gradient(to bottom, rgba(247,191,204,0.55) 2px, transparent 2px)
+              `,
+                            backgroundSize: '56px 56px',
+                            opacity: 0.55
+                        }}
+                    />
                     {/* subtle highlight blob */}
                     <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-white/10 blur-2xl" />
 
@@ -74,7 +85,7 @@ export default function AboutSection() {
                     {/* stagger content */}
                     <h2
                         className={[
-                            'font-onest tracking-[0.18em] text-ddCocoa text-center font-extrabold',
+                            'font-onest tracking-[0.18em] text-ddInkBlue text-center font-extrabold',
                             'text-[34px] sm:text-[46px] lg:text-[58px]',
                             'transition-[opacity,transform] duration-500',
                             anim('0.25s')
@@ -87,7 +98,7 @@ export default function AboutSection() {
                         className={[
                             'mt-6 sm:mt-10',
                             'px-0 sm:px-10',
-                            'font-mono text-ddInkBlue',
+                            'font-mono text-ddCocoa',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.40s')
@@ -103,7 +114,7 @@ export default function AboutSection() {
                         className={[
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
-                            'font-mono text-ddInkBlue',
+                            'font-mono text-ddCocoa',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.55s')
@@ -120,7 +131,7 @@ export default function AboutSection() {
                         className={[
                             'mt-5 sm:mt-8',
                             'px-0 sm:px-10',
-                            'font-mono text-ddInkBlue',
+                            'font-mono text-ddCocoa',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.70s')
@@ -136,7 +147,7 @@ export default function AboutSection() {
                             'mt-5 sm:mt-8',
                             'mb-4 sm:mt-4',
                             'px-0 sm:px-10',
-                            'font-mono text-ddInkBlue',
+                            'font-mono text-ddCocoa',
                             'text-md sm:text-lg lg:text-xl',
                             'transition-[opacity,transform] duration-500',
                             anim('0.85s')
@@ -150,7 +161,7 @@ export default function AboutSection() {
                             className="
                 inline-block
                 font-mono font-bold tracking-[0.2em]
-                text-ddCocoa
+                text-ddInkBlue
                 text-md sm:text-lg lg:text-xl
                 transition-all duration-300
                 hover:text-ddBlush hover:scale-110
