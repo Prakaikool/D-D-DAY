@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useMemo } from 'react';
 import { MESSAGES } from '@/data/messages';
 import QuoteBlock from '@/component/QuoteBlock';
+import ScrollReveal from './ScrollReveal';
 
 function dayOfYearUTC(d: Date) {
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
@@ -135,7 +136,6 @@ export default function Content({ onOpenOverlay }: ContentProps) {
     function onClickRandom() {
         const state = readDailyState();
 
-        // หา prev ล่าสุดจาก state.used ตัวสุดท้าย (ถ้าไม่มีใช้ todayIndex)
         const prevIndex =
             state.used.length > 0
                 ? state.used[state.used.length - 1]
@@ -162,24 +162,35 @@ export default function Content({ onOpenOverlay }: ContentProps) {
             <div className="mx-auto max-w-[1400px] px-6 sm:px-6 pt-6 sm:pt-12 pb-8 sm:pb-12">
                 {/* TOP BAR */}
                 <div className="flex items-center justify-between border-2 border-ddCocoa bg-ddCocoa px-4 sm:px-6 py-3 sm:py-4">
-                    <div className="font-mono text-lg sm:text-2xl tracking-[0.25em] text-ddSky">
-                        D-D-DAY
-                    </div>
-
-                    <button
-                        onClick={() => {
-                            document.getElementById('about')?.scrollIntoView({
-                                behavior: 'smooth'
-                            });
-                        }}
-                        className="
+                    <ScrollReveal
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-200"
+                    >
+                        <div className="font-mono text-lg sm:text-2xl tracking-[0.25em] text-ddSky">
+                            D-D-DAY
+                        </div>
+                    </ScrollReveal>
+                    <ScrollReveal
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-200"
+                    >
+                        <button
+                            onClick={() => {
+                                document
+                                    .getElementById('about')
+                                    ?.scrollIntoView({
+                                        behavior: 'smooth'
+                                    });
+                            }}
+                            className="
               font-mono text-base sm:text-xl tracking-[0.2em] text-ddSky
               transition-all duration-300 ease-out
               hover:text-white hover:scale-110
             "
-                    >
-                        ABOUT
-                    </button>
+                        >
+                            ABOUT
+                        </button>
+                    </ScrollReveal>
                 </div>
 
                 {/* MAIN CARD */}
@@ -233,10 +244,14 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                     <QuoteBlock dateLabel={dateLabel} />
 
                     {/* button */}
-                    <div className="relative -mt-32 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
-                        <button
-                            onClick={onClickRandom}
-                            className="
+                    <ScrollReveal
+                        animationClass="animate-slideInUp"
+                        delayClass="anim-delay-200"
+                    >
+                        <div className="relative -mt-32 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
+                            <button
+                                onClick={onClickRandom}
+                                className="
                 group relative overflow-hidden
                 rounded-full border-2 border-ddInkBlue bg-ddBlush
                 px-8 sm:px-10 py-3
@@ -248,9 +263,9 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                 active:translate-y-[3px]
                 active:shadow-[0_5px_0_rgba(79,29,22,0.25)]
               "
-                        >
-                            <span
-                                className="
+                            >
+                                <span
+                                    className="
                   pointer-events-none absolute inset-0
                   -translate-x-full
                   bg-gradient-to-r from-transparent via-white/30 to-transparent
@@ -258,18 +273,21 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                   group-hover:opacity-100 group-hover:translate-x-full
                   transition duration-700
                 "
-                            />
-                            <span className="relative z-10">Click here!</span>
-                            <span
-                                className="
+                                />
+                                <span className="relative z-10">
+                                    Click here!
+                                </span>
+                                <span
+                                    className="
                   pointer-events-none absolute inset-0 rounded-full
                   ring-0 ring-ddInkBlue/30
                   transition-all duration-300
                   group-hover:ring-4
                 "
-                            />
-                        </button>
-                    </div>
+                                />
+                            </button>
+                        </div>
+                    </ScrollReveal>
 
                     {/* corner dot */}
                     <div className="absolute bottom-3 right-4 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush">

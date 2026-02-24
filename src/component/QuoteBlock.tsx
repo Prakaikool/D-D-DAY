@@ -1,3 +1,5 @@
+import ScrollReveal from './ScrollReveal';
+
 type QuoteBlockProps = {
     title?: string;
     dateLabel: string;
@@ -10,26 +12,40 @@ export default function QuoteBlock({
     return (
         <div className="relative min-h-[680px] sm:min-h-[520px] px-6 py-8 sm:px-10 sm:py-10">
             {/* date */}
-            <div className="font-mono text-md sm:text-xl text-ddInkBlue animate-slideDownFade">
-                {dateLabel}
-            </div>
+            <ScrollReveal
+                animationClass="animate-slideInLeft"
+                delayClass="anim-delay-200"
+            >
+                <div className="font-mono text-md sm:text-xl text-ddInkBlue animate-slideDownFade">
+                    {dateLabel}
+                </div>
+            </ScrollReveal>
 
             {/* title */}
-            <h1
-                className="
+            <ScrollReveal
+                animationClass="animate-slideInDown"
+                delayClass="anim-delay-500"
+            >
+                <h1
+                    className="
           mt-20 sm:mt-14
           text-center
           font-onest font-semibold leading-tight text-ddCocoa
           text-[34px] sm:text-[46px] lg:text-[58px]
           animate-slideDownFade [animation-delay:0.08s]
         "
-            >
-                {title}
-            </h1>
+                >
+                    {title}
+                </h1>
+            </ScrollReveal>
 
             {/* subtitle */}
-            <div
-                className="
+            <ScrollReveal
+                animationClass="animate-slideInUp"
+                delayClass="anim-delay-500"
+            >
+                <div
+                    className="
           mt-10 sm:mt-10
           text-center
           font-mono leading-relaxed text-ddInkBlue
@@ -37,10 +53,11 @@ export default function QuoteBlock({
           space-y-1
           animate-slideDownFade [animation-delay:0.18s]
         "
-            >
-                <p>Let me be a soft chapter in your story today</p>
-                <p>I hope it makes you smile...</p>
-            </div>
+                >
+                    <p>Let me be a soft chapter in your story today</p>
+                    <p>I hope it makes you smile...</p>
+                </div>
+            </ScrollReveal>
         </div>
     );
 }
