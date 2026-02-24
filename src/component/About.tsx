@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import ScrollReveal from './ScrollReveal';
 
 export default function AboutSection() {
     const ref = useRef<HTMLElement | null>(null);
@@ -83,81 +84,105 @@ export default function AboutSection() {
                     </div>
 
                     {/* stagger content */}
-                    <h2
-                        className={[
-                            'font-onest tracking-[0.18em] text-ddInkBlue text-center font-extrabold',
-                            'text-[34px] sm:text-[46px] lg:text-[58px]',
-                            anim('0.25s')
-                        ].join(' ')}
+                    <ScrollReveal
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-200"
                     >
-                        ABOUT
-                    </h2>
+                        <h2
+                            className={[
+                                'font-onest tracking-[0.18em] text-ddInkBlue text-center font-extrabold',
+                                'text-[34px] sm:text-[46px] lg:text-[58px]',
+                                anim('0.25s')
+                            ].join(' ')}
+                        >
+                            ABOUT
+                        </h2>
+                    </ScrollReveal>
+                    <ScrollReveal
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-200"
+                    >
+                        <p
+                            className={[
+                                'mt-6 sm:mt-10',
+                                'px-0 sm:px-10',
+                                'font-mono text-ddCocoa',
+                                'text-md sm:text-lg lg:text-xl',
+                                'transition-[opacity,transform] duration-500',
+                                anim('0.40s')
+                            ].join(' ')}
+                        >
+                            If you are someone who received the link to this
+                            page,
+                            <br className="hidden sm:block" />I want you to know
+                            that... You are one of the people Nadia holds close
+                            and dear.
+                        </p>
+                    </ScrollReveal>
 
-                    <p
-                        className={[
-                            'mt-6 sm:mt-10',
-                            'px-0 sm:px-10',
-                            'font-mono text-ddCocoa',
-                            'text-md sm:text-lg lg:text-xl',
-                            'transition-[opacity,transform] duration-500',
-                            anim('0.40s')
-                        ].join(' ')}
+                    <ScrollReveal
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-400"
                     >
-                        If you are someone who received the link to this page,
-                        <br className="hidden sm:block" />I want you to know
-                        that... You are one of the people Nadia holds close and
-                        dear.
-                    </p>
+                        <p
+                            className={[
+                                'mt-5 sm:mt-8',
+                                'px-0 sm:px-10',
+                                'font-mono text-ddCocoa',
+                                'text-md sm:text-lg lg:text-xl',
+                                'transition-[opacity,transform] duration-500',
+                                anim('0.55s')
+                            ].join(' ')}
+                        >
+                            This little page was inspired by fortune cookies.
+                            Nadia created it to share small messages and gentle
+                            words of encouragement, so that anyone can open it
+                            each day and receive something warm like a soft
+                            little fortune meant just for that moment.
+                        </p>
+                    </ScrollReveal>
 
-                    <p
-                        className={[
-                            'mt-5 sm:mt-8',
-                            'px-0 sm:px-10',
-                            'font-mono text-ddCocoa',
-                            'text-md sm:text-lg lg:text-xl',
-                            'transition-[opacity,transform] duration-500',
-                            anim('0.55s')
-                        ].join(' ')}
+                    <ScrollReveal
+                        animationClass="animate-slideInDown"
+                        delayClass="anim-delay-600"
                     >
-                        This little page was inspired by fortune cookies. Nadia
-                        created it to share small messages and gentle words of
-                        encouragement, so that anyone can open it each day and
-                        receive something warm like a soft little fortune meant
-                        just for that moment.
-                    </p>
-
-                    <p
-                        className={[
-                            'mt-5 sm:mt-8',
-                            'px-0 sm:px-10',
-                            'font-mono text-ddCocoa',
-                            'text-md sm:text-lg lg:text-xl',
-                            'transition-[opacity,transform] duration-500',
-                            anim('0.70s')
-                        ].join(' ')}
+                        <p
+                            className={[
+                                'mt-5 sm:mt-8',
+                                'px-0 sm:px-10',
+                                'font-mono text-ddCocoa',
+                                'text-md sm:text-lg lg:text-xl',
+                                'transition-[opacity,transform] duration-500',
+                                anim('0.70s')
+                            ].join(' ')}
+                        >
+                            Whether you arrive here on a bright day or a heavy
+                            one, I hope these tiny messages can bring you a
+                            sense of comfort and make your day feel just a
+                            little softer.
+                        </p>
+                    </ScrollReveal>
+                    <ScrollReveal
+                        animationClass="animate-slideInUp"
+                        delayClass="anim-delay-800"
                     >
-                        Whether you arrive here on a bright day or a heavy one,
-                        I hope these tiny messages can bring you a sense of
-                        comfort and make your day feel just a little softer.
-                    </p>
-
-                    <p
-                        className={[
-                            'mt-5 sm:mt-8',
-                            'mb-4 sm:mt-4',
-                            'px-0 sm:px-10',
-                            'font-mono text-ddCocoa',
-                            'text-md sm:text-lg lg:text-xl',
-                            'transition-[opacity,transform] duration-500',
-                            anim('0.85s')
-                        ].join(' ')}
-                    >
-                        If you’d like to see more of Nadia’s work → Visit{' '}
-                        <a
-                            href="https://www.prakaikool-teepraken.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="
+                        <p
+                            className={[
+                                'mt-5 sm:mt-8',
+                                'mb-4 sm:mt-4',
+                                'px-0 sm:px-10',
+                                'font-mono text-ddCocoa',
+                                'text-md sm:text-lg lg:text-xl',
+                                'transition-[opacity,transform] duration-500',
+                                anim('0.85s')
+                            ].join(' ')}
+                        >
+                            If you’d like to see more of Nadia’s work → Visit{' '}
+                            <a
+                                href="https://www.prakaikool-teepraken.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
                 inline-block
                 font-mono font-bold tracking-[0.2em]
                 text-ddInkBlue
@@ -165,10 +190,11 @@ export default function AboutSection() {
                 transition-all duration-300
                 hover:text-ddBlush hover:scale-110
               "
-                        >
-                            PORTFOLIO
-                        </a>
-                    </p>
+                            >
+                                PORTFOLIO
+                            </a>
+                        </p>
+                    </ScrollReveal>
                 </div>
             </div>
         </section>
