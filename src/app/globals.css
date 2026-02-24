@@ -1,22 +1,22 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-onest, Arial, Helvetica, sans-serif);
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-onest, Arial, Helvetica, sans-serif);
 }
 
 @theme {
-  --color-ddSky: #d9e8ff;
-  --color-ddButter: #f7e498;
-  --color-ddBlush: #f7bfcc;
-  --color-ddInkBlue: #0d3b9f;
-  --color-ddCocoa: #4f1d16;
+    --color-ddSky: #d9e8ff;
+    --color-ddButter: #f7e498;
+    --color-ddBlush: #f7bfcc;
+    --color-ddInkBlue: #0d3b9f;
+    --color-ddCocoa: #4f1d16;
 }
 
 /* ========================= */
@@ -270,5 +270,35 @@ body {
     .animate-slideInDown,
     .animate-pulseRing {
         animation: none !important;
+    }
+}
+
+@layer utilities {
+    /* ---------- FLOAT ---------- */
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-12px);
+        }
+    }
+    .animate-float {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    /* ---------- TINY BOUNCE ---------- */
+    @keyframes tinyBounce {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-3px);
+        }
+    }
+    .animate-tinyBounce {
+        animation: tinyBounce 2.8s ease-in-out infinite;
     }
 }

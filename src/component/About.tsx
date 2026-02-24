@@ -87,7 +87,6 @@ export default function AboutSection() {
                         className={[
                             'font-onest tracking-[0.18em] text-ddInkBlue text-center font-extrabold',
                             'text-[34px] sm:text-[46px] lg:text-[58px]',
-                            'transition-[opacity,transform] duration-500',
                             anim('0.25s')
                         ].join(' ')}
                     >
