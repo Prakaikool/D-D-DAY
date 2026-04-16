@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { toPng } from 'html-to-image';
 
 type OverlayQuoteCardProps = {
     isOpen: boolean;
@@ -38,6 +37,98 @@ function QuotedText({
     );
 }
 
+async function buildShareImage(
+    bgSrc: string,
+    enLines: string[],
+    thLines: string[]
+): Promise<string> {
+    const W = 1080, H = 1350;
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d')!;
+
+    // Draw background image
+    const bg = new window.Image();
+    bg.src = bgSrc;
+    await new Promise<void>((res, rej) => {
+        bg.onload = () => res();
+        bg.onerror = rej;
+    });
+    ctx.drawImage(bg, 0, 0, W, H);
+
+    // Wait for custom fonts so canvas text renders correctly
+    await document.fonts.ready;
+
+    // Read the actual scoped font-family names Next.js assigned
+    const cs = getComputedStyle(document.body);
+    const monoFamily = cs.getPropertyValue('--font-mono').trim() || 'monospace';
+    const onestFamily = cs.getPropertyValue('--font-onest').trim() || 'sans-serif';
+
+    const COCOA = '#4f1d16';
+    const INK = '#0d3b9f';
+    const PADDING = 88;
+
+    // Font sizes
+    const SZ_HEADER = 52;
+    const SZ_EN = 54;
+    const SZ_TH = 44;
+    const LINE_H_EN = SZ_EN + 14;
+    const LINE_H_TH = SZ_TH + 12;
+
+    // Total block height for vertical centering
+    const enBlockH = enLines.length * LINE_H_EN;
+    const thBlockH = thLines.length * LINE_H_TH;
+    const GAP_AFTER_HEADER = 96;
+    const GAP_EN_TH = 60;
+    const GAP_BEFORE_SIG = 96;
+    const totalBlockH =
+        SZ_HEADER + GAP_AFTER_HEADER +
+        enBlockH +
+        GAP_EN_TH +
+        thBlockH +
+        GAP_BEFORE_SIG + SZ_HEADER;
+
+    let y = Math.round((H - totalBlockH) / 2) + SZ_HEADER;
+
+    // "Dear, You!"
+    ctx.font = `500 ${SZ_HEADER}px ${monoFamily}`;
+    ctx.fillStyle = INK;
+    ctx.textAlign = 'left';
+    ctx.fillText('Dear, You!', PADDING, y);
+    y += GAP_AFTER_HEADER;
+
+    // EN quote lines
+    ctx.font = `500 ${SZ_EN}px ${monoFamily}`;
+    ctx.fillStyle = COCOA;
+    ctx.textAlign = 'center';
+    enLines.forEach((line, i) => {
+        const prefix = i === 0 ? '\u201C' : '';
+        const suffix = i === enLines.length - 1 ? '\u201D' : '';
+        ctx.fillText(prefix + line + suffix, W / 2, y + i * LINE_H_EN);
+    });
+    y += enBlockH + GAP_EN_TH;
+
+    // TH quote lines
+    ctx.font = `500 ${SZ_TH}px ${onestFamily}`;
+    ctx.fillStyle = COCOA;
+    ctx.textAlign = 'center';
+    thLines.forEach((line, i) => {
+        const prefix = i === 0 ? '\u201C' : '';
+        const suffix = i === thLines.length - 1 ? '\u201D' : '';
+        ctx.fillText(prefix + line + suffix, W / 2, y + i * LINE_H_TH);
+    });
+    y += thBlockH + GAP_BEFORE_SIG;
+
+    // "Nadia :)"
+    ctx.font = `500 ${SZ_HEADER}px ${monoFamily}`;
+    ctx.fillStyle = INK;
+    ctx.textAlign = 'right';
+    ctx.fillText('Nadia :)', W - PADDING, y);
+
+    return canvas.toDataURL('image/png');
+}
+
 export default function OverlayQuoteCard({
     isOpen,
     bgSrc,
@@ -49,26 +140,30 @@ export default function OverlayQuoteCard({
     const [isSharing, setIsSharing] = useState(false);
 
     async function handleShare() {
-        if (!cardRef.current || isSharing) return;
+        if (isSharing) return;
         setIsSharing(true);
         try {
-            const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
-
+            const dataUrl = await buildShareImage(bgSrc, enLines, thLines);
             const res = await fetch(dataUrl);
             const blob = await res.blob();
             const file = new File([blob], 'quote.png', { type: 'image/png' });
 
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            if (navigator.canShare?.({ files: [file] })) {
+                // Mobile: native share sheet → Instagram, Facebook, WhatsApp, etc.
                 await navigator.share({ files: [file], title: 'A warm message for you' });
             } else {
-                // Desktop fallback: download the image
+                // Desktop: download the image
                 const a = document.createElement('a');
                 a.href = dataUrl;
                 a.download = 'quote.png';
                 a.click();
             }
-        } catch {
-            // User cancelled share or capture failed — do nothing
+        } catch (err) {
+            // User cancelled the share dialog — ignore. Log anything else.
+            const e = err as Error;
+            if (e?.name !== 'AbortError') {
+                console.error('Share failed:', e);
+            }
         } finally {
             setIsSharing(false);
         }
@@ -104,7 +199,7 @@ export default function OverlayQuoteCard({
             <div
                 className="
           relative w-full
-          max-w-[520px] sm:max-w-[650px]
+          max-w-130 sm:max-w-162.5
           animate-overlayEnter
         "
                 onMouseDown={(e) => e.stopPropagation()}
@@ -144,7 +239,7 @@ export default function OverlayQuoteCard({
                     </button>
                 </div>
 
-                {/* Card — captured as image */}
+                {/* Card */}
                 <div
                     ref={cardRef}
                     className="
@@ -152,7 +247,7 @@ export default function OverlayQuoteCard({
             aspect-4/5 sm:aspect-square
           "
                 >
-                    {/* background image — plain img so canvas capture works */}
+                    {/* background image */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={bgSrc}
@@ -172,8 +267,8 @@ export default function OverlayQuoteCard({
                             className="
     relative w-full
     max-w-[min(86vw,320px)]
-    sm:max-w-[420px]
-    lg:max-w-[380px]
+    sm:max-w-105
+    lg:max-w-95
     overflow-auto
     rounded-xl lg:rounded-2xl
     px-2 sm:px-0
