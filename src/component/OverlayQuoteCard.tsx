@@ -37,11 +37,30 @@ function QuotedText({
     );
 }
 
+/** Find the largest font size where every line fits within maxWidth. */
+function fitFontSize(
+    ctx: CanvasRenderingContext2D,
+    lines: string[],
+    fontFn: (sz: number) => string,
+    startSize: number,
+    minSize: number,
+    maxWidth: number
+): number {
+    let sz = startSize;
+    while (sz > minSize) {
+        ctx.font = fontFn(sz);
+        const widest = Math.max(...lines.map(l => ctx.measureText(l).width));
+        if (widest <= maxWidth) break;
+        sz -= 2;
+    }
+    return sz;
+}
+
 async function buildShareImage(
     bgSrc: string,
     enLines: string[],
     thLines: string[]
-): Promise<string> {
+): Promise<Blob> {
     const W = 1080, H = 1350;
     const canvas = document.createElement('canvas');
     canvas.width = W;
@@ -67,21 +86,25 @@ async function buildShareImage(
 
     const COCOA = '#4f1d16';
     const INK = '#0d3b9f';
-    const PADDING = 88;
+    const PADDING = 100;
+    const MAX_TEXT_W = W - PADDING * 2; // 880px available
 
-    // Font sizes
-    const SZ_HEADER = 52;
-    const SZ_EN = 54;
-    const SZ_TH = 44;
-    const LINE_H_EN = SZ_EN + 14;
-    const LINE_H_TH = SZ_TH + 12;
+    // Auto-fit font sizes so no line overflows
+    const SZ_HEADER = 50;
+    const enQuoteLines = enLines.map((l, i) => (i === 0 ? '\u201C' : '') + l + (i === enLines.length - 1 ? '\u201D' : ''));
+    const thQuoteLines = thLines.map((l, i) => (i === 0 ? '\u201C' : '') + l + (i === thLines.length - 1 ? '\u201D' : ''));
+    const szEN = fitFontSize(ctx, enQuoteLines, sz => `500 ${sz}px ${monoFamily}`, 52, 24, MAX_TEXT_W);
+    const szTH = fitFontSize(ctx, thQuoteLines, sz => `500 ${sz}px ${onestFamily}`, 44, 20, MAX_TEXT_W);
+
+    const LINE_H_EN = szEN + 16;
+    const LINE_H_TH = szTH + 14;
 
     // Total block height for vertical centering
     const enBlockH = enLines.length * LINE_H_EN;
     const thBlockH = thLines.length * LINE_H_TH;
-    const GAP_AFTER_HEADER = 96;
-    const GAP_EN_TH = 60;
-    const GAP_BEFORE_SIG = 96;
+    const GAP_AFTER_HEADER = 90;
+    const GAP_EN_TH = 56;
+    const GAP_BEFORE_SIG = 90;
     const totalBlockH =
         SZ_HEADER + GAP_AFTER_HEADER +
         enBlockH +
@@ -98,25 +121,21 @@ async function buildShareImage(
     ctx.fillText('Dear, You!', PADDING, y);
     y += GAP_AFTER_HEADER;
 
-    // EN quote lines
-    ctx.font = `500 ${SZ_EN}px ${monoFamily}`;
+    // EN quote lines (auto-fitted size)
+    ctx.font = `500 ${szEN}px ${monoFamily}`;
     ctx.fillStyle = COCOA;
     ctx.textAlign = 'center';
-    enLines.forEach((line, i) => {
-        const prefix = i === 0 ? '\u201C' : '';
-        const suffix = i === enLines.length - 1 ? '\u201D' : '';
-        ctx.fillText(prefix + line + suffix, W / 2, y + i * LINE_H_EN);
+    enQuoteLines.forEach((line, i) => {
+        ctx.fillText(line, W / 2, y + i * LINE_H_EN);
     });
     y += enBlockH + GAP_EN_TH;
 
-    // TH quote lines
-    ctx.font = `500 ${SZ_TH}px ${onestFamily}`;
+    // TH quote lines (auto-fitted size)
+    ctx.font = `500 ${szTH}px ${onestFamily}`;
     ctx.fillStyle = COCOA;
     ctx.textAlign = 'center';
-    thLines.forEach((line, i) => {
-        const prefix = i === 0 ? '\u201C' : '';
-        const suffix = i === thLines.length - 1 ? '\u201D' : '';
-        ctx.fillText(prefix + line + suffix, W / 2, y + i * LINE_H_TH);
+    thQuoteLines.forEach((line, i) => {
+        ctx.fillText(line, W / 2, y + i * LINE_H_TH);
     });
     y += thBlockH + GAP_BEFORE_SIG;
 
@@ -126,7 +145,12 @@ async function buildShareImage(
     ctx.textAlign = 'right';
     ctx.fillText('Nadia :)', W - PADDING, y);
 
-    return canvas.toDataURL('image/png');
+    return new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error('canvas.toBlob returned null'));
+        }, 'image/png');
+    });
 }
 
 export default function OverlayQuoteCard({
@@ -137,37 +161,52 @@ export default function OverlayQuoteCard({
     onClose
 }: OverlayQuoteCardProps) {
     const cardRef = useRef<HTMLDivElement>(null);
-    const [isSharing, setIsSharing] = useState(false);
+    // 'idle' | 'working' | 'copied'
+    const [btnState, setBtnState] = useState<'idle' | 'working' | 'copied'>('idle');
 
     async function handleShare() {
-        if (isSharing) return;
-        setIsSharing(true);
+        if (btnState !== 'idle') return;
+        setBtnState('working');
+        let objectUrl: string | null = null;
         try {
-            const dataUrl = await buildShareImage(bgSrc, enLines, thLines);
-            const res = await fetch(dataUrl);
-            const blob = await res.blob();
+            const blob = await buildShareImage(bgSrc, enLines, thLines);
             const file = new File([blob], 'quote.png', { type: 'image/png' });
 
             if (navigator.canShare?.({ files: [file] })) {
-                // Mobile: native share sheet → Instagram, Facebook, WhatsApp, etc.
+                // Mobile: native share sheet → Save Image, Instagram, WhatsApp, etc.
                 await navigator.share({ files: [file], title: 'A warm message for you' });
+                setBtnState('idle');
+            } else if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+                // Desktop Chrome/Edge: copy image pixels to clipboard → Ctrl+V works anywhere
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+                setBtnState('copied');
+                setTimeout(() => setBtnState('idle'), 2500);
             } else {
-                // Desktop: download the image
+                // Fallback: download the file
+                objectUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = dataUrl;
+                a.href = objectUrl;
                 a.download = 'quote.png';
                 a.click();
+                setBtnState('idle');
             }
         } catch (err) {
-            // User cancelled the share dialog — ignore. Log anything else.
             const e = err as Error;
             if (e?.name !== 'AbortError') {
                 console.error('Share failed:', e);
             }
+            setBtnState('idle');
         } finally {
-            setIsSharing(false);
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
         }
     }
+
+    const btnLabel =
+        btnState === 'working' ? 'Saving…' :
+        btnState === 'copied'  ? 'Copied! ✓' :
+        'Share ↗';
 
     if (!isOpen) return null;
 
@@ -210,7 +249,7 @@ export default function OverlayQuoteCard({
                     <button
                         type="button"
                         onClick={handleShare}
-                        disabled={isSharing}
+                        disabled={btnState !== 'idle'}
                         className="
                             rounded-full border-2 border-ddInkBlue/70
                             bg-ddBlush px-3 py-2 sm:px-4
@@ -220,7 +259,7 @@ export default function OverlayQuoteCard({
                             disabled:opacity-50
                         "
                     >
-                        {isSharing ? 'Saving…' : 'Share ↗'}
+                        {btnLabel}
                     </button>
 
                     {/* Close */}
