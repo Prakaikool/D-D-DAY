@@ -1,4 +1,7 @@
-import Image from 'next/image';
+'use client';
+
+import { useRef, useState } from 'react';
+import { toPng } from 'html-to-image';
 
 type OverlayQuoteCardProps = {
     isOpen: boolean;
@@ -15,13 +18,11 @@ function QuotedText({
     lines: string[];
     className: string;
 }) {
-    // ✅ If lines are provided (1-2 lines), we keep them.
-    // But we still make wrapping look nicer with text-balance and a max width.
     const hasMultiple = lines.length > 1;
 
     return (
         <p className={className}>
-            “
+            "
             {hasMultiple ? (
                 lines.map((line, i) => (
                     <span key={i}>
@@ -32,7 +33,7 @@ function QuotedText({
             ) : (
                 <span>{lines[0] ?? ''}</span>
             )}
-            ”
+            "
         </p>
     );
 }
@@ -44,6 +45,35 @@ export default function OverlayQuoteCard({
     thLines,
     onClose
 }: OverlayQuoteCardProps) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [isSharing, setIsSharing] = useState(false);
+
+    async function handleShare() {
+        if (!cardRef.current || isSharing) return;
+        setIsSharing(true);
+        try {
+            const dataUrl = await toPng(cardRef.current, { pixelRatio: 2 });
+
+            const res = await fetch(dataUrl);
+            const blob = await res.blob();
+            const file = new File([blob], 'quote.png', { type: 'image/png' });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title: 'A warm message for you' });
+            } else {
+                // Desktop fallback: download the image
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                a.download = 'quote.png';
+                a.click();
+            }
+        } catch {
+            // User cancelled share or capture failed — do nothing
+        } finally {
+            setIsSharing(false);
+        }
+    }
+
     if (!isOpen) return null;
 
     return (
@@ -75,41 +105,59 @@ export default function OverlayQuoteCard({
                 className="
           relative w-full
           max-w-[520px] sm:max-w-[650px]
+          animate-overlayEnter
         "
                 onMouseDown={(e) => e.stopPropagation()}
             >
-                {/* Close */}
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="
-            absolute right-3 top-3 z-[60]
-            pointer-events-auto
-            rounded-full border-2 border-ddInkBlue/70
-            bg-ddBlush px-3 py-2 sm:px-4
-            font-mono text-sm sm:text-md text-ddInkBlue
-            shadow
-            hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush
-          "
-                >
-                    Close ✕
-                </button>
+                {/* Buttons row */}
+                <div className="absolute right-3 top-3 z-60 flex gap-2 pointer-events-auto">
+                    {/* Share */}
+                    <button
+                        type="button"
+                        onClick={handleShare}
+                        disabled={isSharing}
+                        className="
+                            rounded-full border-2 border-ddInkBlue/70
+                            bg-ddBlush px-3 py-2 sm:px-4
+                            font-mono text-sm sm:text-md text-ddInkBlue
+                            shadow
+                            hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush
+                            disabled:opacity-50
+                        "
+                    >
+                        {isSharing ? 'Saving…' : 'Share ↗'}
+                    </button>
 
-                {/* Card */}
+                    {/* Close */}
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="
+                            rounded-full border-2 border-ddInkBlue/70
+                            bg-ddBlush px-3 py-2 sm:px-4
+                            font-mono text-sm sm:text-md text-ddInkBlue
+                            shadow
+                            hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush
+                        "
+                    >
+                        Close ✕
+                    </button>
+                </div>
+
+                {/* Card — captured as image */}
                 <div
+                    ref={cardRef}
                     className="
             relative w-full overflow-hidden
-            aspect-[4/5] sm:aspect-square
+            aspect-4/5 sm:aspect-square
           "
                 >
-                    {/* background image */}
-                    <Image
+                    {/* background image — plain img so canvas capture works */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                         src={bgSrc}
                         alt=""
-                        fill
-                        className="object-contain"
-                        // optional: helps avoid heavy caching while dev
-                        // unoptimized
+                        className="absolute inset-0 w-full h-full object-contain"
                     />
 
                     {/* Content */}
@@ -123,12 +171,12 @@ export default function OverlayQuoteCard({
                         <div
                             className="
     relative w-full
-    max-w-[min(86vw,320px)]    /* ✅ mobile (Flip) จะไม่เกินจอ */
+    max-w-[min(86vw,320px)]
     sm:max-w-[420px]
     lg:max-w-[380px]
     overflow-auto
     rounded-xl lg:rounded-2xl
-    px-2 sm:px-0              /* ✅ กันข้อความชนขอบในจอแคบ */
+    px-2 sm:px-0
   "
                         >
                             <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">

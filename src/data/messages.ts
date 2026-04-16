@@ -248,15 +248,11 @@ export const MESSAGES: Message[] = [
         th: ['หากวันนี้สิ่งเดียวที่คุณทำได้คือการหายใจ', 'นั่นก็เก่งมากแล้ว']
     },
     {
-        en: ['It’s hard', 'but atleast we have eatch other.'],
+        en: ['It’s hard', 'but at least we have each other.'],
         th: ['ถึงแม้ว่ามันจะยาก', 'แต่อย่างน้อยเราก็มีกันและกัน']
     },
     {
         en: ['Taking each day as it comes'],
-        th: ['ถึงแม้ว่ามันจะยาก']
-    },
-    {
-        en: [''],
-        th: ['']
+        th: ['ค่อยๆ ก้าวไปทีละวัน ก็เพียงพอแล้ว']
     }
 ];
