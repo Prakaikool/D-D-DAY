@@ -1,14 +1,13 @@
 import ScrollReveal from './ScrollReveal';
+import { useLang } from '@/context/LanguageContext';
 
 type QuoteBlockProps = {
-    title?: string;
     dateLabel: string;
 };
 
-export default function QuoteBlock({
-    title = 'Hello, my favorite person!',
-    dateLabel
-}: QuoteBlockProps) {
+export default function QuoteBlock({ dateLabel }: QuoteBlockProps) {
+    const { t } = useLang();
+
     return (
         <div className="relative px-6 pt-8 pb-6 sm:px-10 sm:pt-10 sm:pb-8">
             {/* date */}
@@ -35,7 +34,7 @@ export default function QuoteBlock({
           animate-slideDownFade [animation-delay:0.08s]
         "
                 >
-                    {title}
+                    {t('quote_greeting')}
                 </h1>
             </ScrollReveal>
 
@@ -54,8 +53,8 @@ export default function QuoteBlock({
           animate-slideDownFade [animation-delay:0.18s]
         "
                 >
-                    <p>Let me be a soft chapter in your story today</p>
-                    <p>I hope it makes you smile...</p>
+                    <p>{t('quote_subtitle_1')}</p>
+                    <p>{t('quote_subtitle_2')}</p>
                 </div>
             </ScrollReveal>
         </div>

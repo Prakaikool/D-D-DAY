@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useLang } from '@/context/LanguageContext';
 
 type OverlayQuoteCardProps = {
     isOpen: boolean;
@@ -160,8 +161,8 @@ export default function OverlayQuoteCard({
     thLines,
     onClose
 }: OverlayQuoteCardProps) {
+    const { lang, t } = useLang();
     const cardRef = useRef<HTMLDivElement>(null);
-    // 'idle' | 'working' | 'copied'
     const [btnState, setBtnState] = useState<'idle' | 'working' | 'copied'>('idle');
 
     async function handleShare() {
@@ -204,9 +205,9 @@ export default function OverlayQuoteCard({
     }
 
     const btnLabel =
-        btnState === 'working' ? 'Saving…' :
-        btnState === 'copied'  ? 'Copied! ✓' :
-        'Share ↗';
+        btnState === 'working' ? t("overlay_saving") :
+        btnState === 'copied'  ? t("overlay_copied") :
+        t("overlay_share");
 
     if (!isOpen) return null;
 
@@ -274,7 +275,7 @@ export default function OverlayQuoteCard({
                             hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush
                         "
                     >
-                        Close ✕
+                        {t("overlay_close")}
                     </button>
                 </div>
 
@@ -314,38 +315,38 @@ export default function OverlayQuoteCard({
   "
                         >
                             <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">
-                                Dear, You!
+                                {t("overlay_dear")}
                             </p>
 
-                            {/* EN */}
-                            <div className="mt-4 sm:mt-12 text-center">
-                                <div className="mx-auto max-w-[26ch] sm:max-w-[32ch]">
-                                    <QuotedText
-                                        lines={enLines}
-                                        className="
+                            {lang === 'en' ? (
+                                <div className="mt-4 sm:mt-12 text-center">
+                                    <div className="mx-auto max-w-[26ch] sm:max-w-[32ch]">
+                                        <QuotedText
+                                            lines={enLines}
+                                            className="
                       font-mono text-ddCocoa
                       text-[16px] sm:text-[22px]
                       leading-relaxed
                       text-balance
                     "
-                                    />
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-
-                            {/* TH */}
-                            <div className="mt-4 sm:mt-5 text-center">
-                                <div className="mx-auto max-w-[24ch] sm:max-w-[30ch]">
-                                    <QuotedText
-                                        lines={thLines}
-                                        className="
+                            ) : (
+                                <div className="mt-4 sm:mt-12 text-center">
+                                    <div className="mx-auto max-w-[24ch] sm:max-w-[30ch]">
+                                        <QuotedText
+                                            lines={thLines}
+                                            className="
                       font-onest text-ddCocoa
-                      text-[14px] sm:text-[18px]
+                      text-[16px] sm:text-[22px]
                       leading-relaxed
                       text-balance
                     "
-                                    />
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             <p className="mt-4 sm:mt-12 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 Nadia :)

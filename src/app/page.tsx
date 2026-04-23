@@ -5,6 +5,7 @@ import Content, { type OverlayPayload } from '@/component/Content';
 import OverlayQuoteCard from '@/component/OverlayQuoteCard';
 import About from '@/component/About';
 import Footer from '@/component/Footer';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 const SPARKLES = [
     { id: 0,  left: '6%',  top: '14%', size: '10px', color: 'rgba(240,188,74,0.70)', dur: '3.8s', del: '0.0s' },
@@ -52,39 +53,41 @@ export default function Page() {
     }, [isOpen]);
 
     return (
-        <main className="min-h-screen bg-ddBlush animate-warmDrift font-onest text-ddCocoa">
-            {/* Ambient sparkles */}
-            <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
-                {SPARKLES.map((s) => (
-                    <span
-                        key={s.id}
-                        className="absolute animate-sparklePop select-none"
-                        style={{
-                            left: s.left,
-                            top: s.top,
-                            fontSize: s.size,
-                            color: s.color,
-                            animationDuration: s.dur,
-                            animationDelay: s.del,
-                        }}
-                    >
-                        ✦
-                    </span>
-                ))}
-            </div>
+        <LanguageProvider>
+            <main className="min-h-screen bg-ddBlush animate-warmDrift font-onest text-ddCocoa">
+                {/* Ambient sparkles */}
+                <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+                    {SPARKLES.map((s) => (
+                        <span
+                            key={s.id}
+                            className="absolute animate-sparklePop select-none"
+                            style={{
+                                left: s.left,
+                                top: s.top,
+                                fontSize: s.size,
+                                color: s.color,
+                                animationDuration: s.dur,
+                                animationDelay: s.del,
+                            }}
+                        >
+                            ✦
+                        </span>
+                    ))}
+                </div>
 
-            <Content onOpenOverlay={handleOpenOverlay} />
+                <Content onOpenOverlay={handleOpenOverlay} />
 
-            <OverlayQuoteCard
-                isOpen={isOpen}
-                bgSrc={overlayData.bgSrc}
-                enLines={overlayData.enLines}
-                thLines={overlayData.thLines}
-                onClose={closeOverlay}
-            />
+                <OverlayQuoteCard
+                    isOpen={isOpen}
+                    bgSrc={overlayData.bgSrc}
+                    enLines={overlayData.enLines}
+                    thLines={overlayData.thLines}
+                    onClose={closeOverlay}
+                />
 
-            <About />
-            <Footer />
-        </main>
+                <About />
+                <Footer />
+            </main>
+        </LanguageProvider>
     );
 }

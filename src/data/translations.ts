@@ -1,0 +1,41 @@
+export const translations = {
+    en: {
+        nav_about: 'ABOUT',
+        cta_button: 'Click here!',
+        quote_greeting: 'Hello, my favorite person!',
+        quote_subtitle_1: 'Let me be a soft chapter in your story today',
+        quote_subtitle_2: 'I hope it makes you smile...',
+        about_heading: 'ABOUT',
+        about_p1: 'If you are someone who received the link to this page, I want you to know that... You are one of the people Nadia holds close and dear.',
+        about_p2: "This little page was inspired by fortune cookies. Nadia created it to share small messages and gentle words of encouragement, so that anyone can open it each day and receive something warm like a soft little fortune meant just for that moment.",
+        about_p3: "Whether you arrive here on a bright day or a heavy one, I hope these tiny messages can bring you a sense of comfort and make your day feel just a little softer.",
+        about_p4: "If you'd like to see more of Nadia's work → Visit",
+        about_portfolio: 'PORTFOLIO',
+        overlay_dear: 'Dear, You!',
+        overlay_close: 'Close ✕',
+        overlay_share: 'Share ↗',
+        overlay_saving: 'Saving…',
+        overlay_copied: 'Copied! ✓',
+    },
+    th: {
+        nav_about: 'เกี่ยวกับ',
+        cta_button: 'คลิกเลย!',
+        quote_greeting: 'สวัสดี คนที่ฉันรักที่สุด!',
+        quote_subtitle_1: 'ขอเป็นช่วงเวลาอ่อนโยนในวันของเธอวันนี้',
+        quote_subtitle_2: 'หวังว่าจะทำให้เธอยิ้มได้...',
+        about_heading: 'เกี่ยวกับ',
+        about_p1: 'ถ้าเธอได้รับลิงก์ไปยังหน้านี้ อยากให้รู้ไว้ว่า... เธอคือหนึ่งในคนที่นาเดียหวงแหนและเก็บไว้ใกล้ชิดที่สุด',
+        about_p2: 'หน้าเล็กๆ นี้ได้แรงบันดาลใจมาจากฟอร์จูนคุกกี้ นาเดียสร้างมันขึ้นมาเพื่อแบ่งปันข้อความเล็กๆ น้อยๆ และคำพูดให้กำลังใจ เพื่อให้ทุกคนสามารถเปิดมันในแต่ละวันและได้รับบางอย่างที่อบอุ่น เหมือนดังโชคลาภเล็กๆ ที่มอบให้สำหรับช่วงเวลานั้น',
+        about_p3: 'ไม่ว่าเธอจะมาที่นี่ในวันที่สดใสหรือวันที่หนักหน่วง หวังว่าข้อความเล็กๆ เหล่านี้จะช่วยให้เธอรู้สึกอบอุ่นและทำให้วันของเธอรู้สึกอ่อนโยนขึ้นสักนิด',
+        about_p4: 'อยากดูผลงานของนาเดียเพิ่มเติม → เยี่ยมชม',
+        about_portfolio: 'ผลงาน',
+        overlay_dear: 'ถึงเธอ',
+        overlay_close: 'ปิด ✕',
+        overlay_share: 'แชร์ ↗',
+        overlay_saving: 'กำลังบันทึก…',
+        overlay_copied: 'คัดลอกแล้ว! ✓',
+    },
+} as const;
+
+export type Lang = keyof typeof translations;
+export type TranslationKey = keyof (typeof translations)['en'];

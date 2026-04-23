@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
 import QuoteBlock from '@/component/QuoteBlock';
 import ScrollReveal from './ScrollReveal';
+import { useLang } from '@/context/LanguageContext';
 
 function dayOfYearUTC(d: Date) {
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
@@ -46,6 +47,7 @@ type ContentProps = {
 };
 
 export default function Content({ onOpenOverlay }: ContentProps) {
+    const { lang, t, toggleLang } = useLang();
     const todayIndex = useMemo(() => {
         const doy = dayOfYearUTC(new Date());
         return doy % MESSAGES.length;
@@ -240,26 +242,47 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                                     D-D-DAY
                                 </div>
                             </ScrollReveal>
+
                             <ScrollReveal
                                 animationClass="animate-slideInDown"
                                 delayClass="anim-delay-200"
                             >
-                                <button
-                                    onClick={() => {
-                                        document
-                                            .getElementById('about')
-                                            ?.scrollIntoView({
-                                                behavior: 'smooth'
-                                            });
-                                    }}
-                                    className="
-              font-mono text-base sm:text-xl tracking-[0.2em] text-ddSky
-              transition-all duration-300 ease-out
-              hover:text-white hover:scale-110
-            "
-                                >
-                                    ABOUT
-                                </button>
+                                <div className="flex items-center gap-3 sm:gap-4">
+                                    {/* Language toggle */}
+                                    <button
+                                        onClick={toggleLang}
+                                        className="
+                                            font-mono text-sm sm:text-base tracking-[0.15em]
+                                            rounded-full border-2 border-ddSky/60
+                                            px-3 py-1
+                                            text-ddSky
+                                            transition-all duration-300
+                                            hover:border-white hover:text-white hover:scale-105
+                                        "
+                                        aria-label="Toggle language"
+                                    >
+                                        <span className={lang === 'en' ? 'opacity-100' : 'opacity-40'}>EN</span>
+                                        <span className="opacity-40 mx-1">|</span>
+                                        <span className={lang === 'th' ? 'opacity-100' : 'opacity-40'}>TH</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => {
+                                            document
+                                                .getElementById('about')
+                                                ?.scrollIntoView({
+                                                    behavior: 'smooth'
+                                                });
+                                        }}
+                                        className="
+                                            font-mono text-base sm:text-xl tracking-[0.2em] text-ddSky
+                                            transition-all duration-300 ease-out
+                                            hover:text-white hover:scale-110
+                                        "
+                                    >
+                                        {t('nav_about')}
+                                    </button>
+                                </div>
                             </ScrollReveal>
                         </div>
 
@@ -386,7 +409,7 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                 "
                                         />
                                         <span className="relative z-10">
-                                            Click here!
+                                            {t('cta_button')}
                                         </span>
                                         <span className="pointer-events-none absolute inset-0 rounded-full animate-ctaRingPulse transition-opacity duration-200 group-hover:opacity-0" />
                                         <span
