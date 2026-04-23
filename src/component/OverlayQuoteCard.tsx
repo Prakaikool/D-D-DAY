@@ -107,24 +107,27 @@ async function buildShareImage(
     const COCOA = '#4f1d16';
     const INK = '#0d3b9f';
 
-    // TEXT_PAD accounts for the thick scalloped border (~18% each side)
-    const TEXT_PAD = Math.round(cardW * 0.18);
-    const MAX_TEXT_W = cardW - TEXT_PAD * 2;
-    const SZ_HEADER = Math.round(cardW * 0.048);
+    // HEADER_PAD: left/right inset for Dear/Nadia — must clear the scalloped border
+    const HEADER_PAD = Math.round(cardW * 0.18);
+    // QUOTE_MAX_W: centered quote can use more width since it's symmetric
+    const QUOTE_MAX_W = Math.round(cardW * 0.78);
+    // SZ_HEADER: smaller label size for Dear / Nadia
+    const SZ_HEADER = Math.round(cardW * 0.038);
     const GAP_AFTER_HEADER = Math.round(cardH * 0.09);
     const GAP_BEFORE_SIG = Math.round(cardH * 0.09);
 
     const isEN = lang === 'en';
     const lines = isEN ? enLines : thLines;
     const fontFamily = isEN ? monoFamily : onestFamily;
-    const startSz = Math.round(cardW * 0.052);
-    const minSz = 20;
+    // Quote starts just below header size so it's always visually smaller
+    const startSz = SZ_HEADER - 4;
+    const minSz = 18;
     const lineGap = isEN ? 18 : 16;
 
     const quoteLines = lines.map(
         (l, i) => (i === 0 ? '”' : '') + l + (i === lines.length - 1 ? '”' : '')
     );
-    const sz = fitFontSize(ctx, quoteLines, s => `500 ${s}px ${fontFamily}`, startSz, minSz, MAX_TEXT_W);
+    const sz = fitFontSize(ctx, quoteLines, s => `500 ${s}px ${fontFamily}`, startSz, minSz, QUOTE_MAX_W);
     const lineH = sz + lineGap;
     const blockH = quoteLines.length * lineH;
     const totalContentH = SZ_HEADER + GAP_AFTER_HEADER + blockH + GAP_BEFORE_SIG + SZ_HEADER;
@@ -135,7 +138,7 @@ async function buildShareImage(
     ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'left';
-    ctx.fillText(dearLabel, cardX + TEXT_PAD, y);
+    ctx.fillText(dearLabel, cardX + HEADER_PAD, y);
     y += GAP_AFTER_HEADER;
 
     ctx.font = `500 ${sz}px ${fontFamily}`;
@@ -147,7 +150,7 @@ async function buildShareImage(
     ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'right';
-    ctx.fillText(nadiaLabel, cardX + cardW - TEXT_PAD, y);
+    ctx.fillText(nadiaLabel, cardX + cardW - HEADER_PAD, y);
 
     return new Promise<Blob>((resolve, reject) => {
         canvas.toBlob(blob => {
@@ -267,7 +270,7 @@ export default function OverlayQuoteCard({
                     />
 
                     <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-8">
-                        <div className="relative w-full max-w-[min(86vw,320px)] sm:max-w-105 lg:max-w-95 overflow-auto rounded-xl lg:rounded-2xl px-2 sm:px-0">
+                        <div className="relative w-full max-w-[min(86vw,320px)] sm:max-w-105 lg:max-w-95 overflow-auto rounded-xl lg:rounded-2xl px-7 sm:px-2">
                             <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 {t("overlay_dear")}
                             </p>
