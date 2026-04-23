@@ -15,7 +15,12 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'D-D-DAY'
+    title: 'D-D-DAY',
+    description: 'Whether you arrive here on a bright day or a heavy one, I hope these tiny messages bring you something warm.',
+    icons: {
+        icon: '/favicon.ico',
+        apple: '/apple-touch-icon.png',
+    },
 };
 
 export default function RootLayout({
