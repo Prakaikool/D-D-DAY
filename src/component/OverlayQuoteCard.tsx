@@ -56,20 +56,50 @@ async function buildShareImage(
     lang: 'en' | 'th',
     dearLabel: string
 ): Promise<Blob> {
+    // 4:5 — perfect for Instagram portrait and mobile screenshots
     const W = 1080, H = 1350;
     const canvas = document.createElement('canvas');
     canvas.width = W;
     canvas.height = H;
     const ctx = canvas.getContext('2d')!;
 
+    // ── 1. Warm background fill ──────────────────────────────────────────
+    ctx.fillStyle = '#fbe8d4';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle grid matching the app
+    ctx.save();
+    ctx.strokeStyle = 'rgba(247,191,204,0.55)';
+    ctx.lineWidth = 2;
+    for (let x = 0; x <= W; x += 56) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y <= H; y += 56) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+    ctx.restore();
+
+    // ── 2. Load card image ───────────────────────────────────────────────
     const bg = new window.Image();
     bg.src = bgSrc;
     await new Promise<void>((res, rej) => {
         bg.onload = () => res();
         bg.onerror = rej;
     });
-    ctx.drawImage(bg, 0, 0, W, H);
 
+    // Draw card centered, maintaining natural aspect ratio, with outer padding
+    const OUTER_PAD = 90;
+    const maxCardW = W - OUTER_PAD * 2;
+    const maxCardH = H - OUTER_PAD * 2;
+    const scale = Math.min(maxCardW / bg.naturalWidth, maxCardH / bg.naturalHeight);
+    const cardW = Math.round(bg.naturalWidth * scale);
+    const cardH = Math.round(bg.naturalHeight * scale);
+    const cardX = Math.round((W - cardW) / 2);
+    const cardY = Math.round((H - cardH) / 2);
+
+    ctx.drawImage(bg, cardX, cardY, cardW, cardH);
+
+    // ── 3. Draw text relative to card area ──────────────────────────────
     await document.fonts.ready;
 
     const cs = getComputedStyle(document.body);
@@ -78,44 +108,48 @@ async function buildShareImage(
 
     const COCOA = '#4f1d16';
     const INK = '#0d3b9f';
-    const PADDING = 100;
-    const MAX_TEXT_W = W - PADDING * 2;
-    const SZ_HEADER = 50;
-    const GAP_AFTER_HEADER = 90;
-    const GAP_BEFORE_SIG = 90;
+
+    // Responsive sizes based on actual card width
+    const TEXT_PAD = Math.round(cardW * 0.09);
+    const MAX_TEXT_W = cardW - TEXT_PAD * 2;
+    const SZ_HEADER = Math.round(cardW * 0.048);
+    const GAP_AFTER_HEADER = Math.round(cardH * 0.09);
+    const GAP_BEFORE_SIG = Math.round(cardH * 0.09);
 
     const isEN = lang === 'en';
     const lines = isEN ? enLines : thLines;
     const fontFamily = isEN ? monoFamily : onestFamily;
-    const startSz = isEN ? 52 : 44;
-    const minSz = isEN ? 24 : 20;
-    const lineGap = isEN ? 16 : 14;
+    const startSz = Math.round(cardW * 0.052);
+    const minSz = 20;
+    const lineGap = isEN ? 18 : 16;
 
     const quoteLines = lines.map(
-        (l, i) => (i === 0 ? '“' : '') + l + (i === lines.length - 1 ? '”' : '')
+        (l, i) => (i === 0 ? '”' : '') + l + (i === lines.length - 1 ? '”' : '')
     );
     const sz = fitFontSize(ctx, quoteLines, s => `500 ${s}px ${fontFamily}`, startSz, minSz, MAX_TEXT_W);
     const lineH = sz + lineGap;
     const blockH = quoteLines.length * lineH;
-    const totalH = SZ_HEADER + GAP_AFTER_HEADER + blockH + GAP_BEFORE_SIG + SZ_HEADER;
-    let y = Math.round((H - totalH) / 2) + SZ_HEADER;
+    const totalContentH = SZ_HEADER + GAP_AFTER_HEADER + blockH + GAP_BEFORE_SIG + SZ_HEADER;
+
+    // Center the text block within the card
+    let y = cardY + Math.round((cardH - totalContentH) / 2) + SZ_HEADER;
 
     ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'left';
-    ctx.fillText(dearLabel, PADDING, y);
+    ctx.fillText(dearLabel, cardX + TEXT_PAD, y);
     y += GAP_AFTER_HEADER;
 
     ctx.font = `500 ${sz}px ${fontFamily}`;
     ctx.fillStyle = COCOA;
     ctx.textAlign = 'center';
-    quoteLines.forEach((line, i) => ctx.fillText(line, W / 2, y + i * lineH));
+    quoteLines.forEach((line, i) => ctx.fillText(line, cardX + cardW / 2, y + i * lineH));
     y += blockH + GAP_BEFORE_SIG;
 
     ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'right';
-    ctx.fillText('Nadia :)', W - PADDING, y);
+    ctx.fillText('Nadia :)', cardX + cardW - TEXT_PAD, y);
 
     return new Promise<Blob>((resolve, reject) => {
         canvas.toBlob(blob => {
