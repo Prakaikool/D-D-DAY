@@ -54,7 +54,8 @@ async function buildShareImage(
     enLines: string[],
     thLines: string[],
     lang: 'en' | 'th',
-    dearLabel: string
+    dearLabel: string,
+    nadiaLabel: string
 ): Promise<Blob> {
     // 4:5 — perfect for Instagram portrait and mobile screenshots
     const W = 1080, H = 1350;
@@ -149,7 +150,7 @@ async function buildShareImage(
     ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'right';
-    ctx.fillText('Nadia :)', cardX + cardW - TEXT_PAD, y);
+    ctx.fillText(nadiaLabel, cardX + cardW - TEXT_PAD, y);
 
     return new Promise<Blob>((resolve, reject) => {
         canvas.toBlob(blob => {
@@ -175,7 +176,7 @@ export default function OverlayQuoteCard({
         setBtnState('working');
         let objectUrl: string | null = null;
         try {
-            const blob = await buildShareImage(bgSrc, enLines, thLines, lang, t("overlay_dear"));
+            const blob = await buildShareImage(bgSrc, enLines, thLines, lang, t("overlay_dear"), t("overlay_nadia"));
             const file = new File([blob], 'quote.png', { type: 'image/png' });
 
             if (navigator.canShare?.({ files: [file] })) {
@@ -295,7 +296,7 @@ export default function OverlayQuoteCard({
                             )}
 
                             <p className="mt-4 sm:mt-12 text-right font-mono text-ddInkBlue text-md sm:text-[22px]">
-                                Nadia :)
+                                {t("overlay_nadia")}
                             </p>
                         </div>
                     </div>
