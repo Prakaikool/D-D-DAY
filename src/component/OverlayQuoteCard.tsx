@@ -11,18 +11,11 @@ type OverlayQuoteCardProps = {
     onClose: () => void;
 };
 
-function QuotedText({
-    lines,
-    className
-}: {
-    lines: string[];
-    className: string;
-}) {
+function QuotedText({ lines, className }: { lines: string[]; className: string }) {
     const hasMultiple = lines.length > 1;
-
     return (
         <p className={className}>
-            "
+            {'“'}
             {hasMultiple ? (
                 lines.map((line, i) => (
                     <span key={i}>
@@ -33,12 +26,11 @@ function QuotedText({
             ) : (
                 <span>{lines[0] ?? ''}</span>
             )}
-            "
+            {'”'}
         </p>
     );
 }
 
-/** Find the largest font size where every line fits within maxWidth. */
 function fitFontSize(
     ctx: CanvasRenderingContext2D,
     lines: string[],
@@ -60,7 +52,9 @@ function fitFontSize(
 async function buildShareImage(
     bgSrc: string,
     enLines: string[],
-    thLines: string[]
+    thLines: string[],
+    lang: 'en' | 'th',
+    dearLabel: string
 ): Promise<Blob> {
     const W = 1080, H = 1350;
     const canvas = document.createElement('canvas');
@@ -68,7 +62,6 @@ async function buildShareImage(
     canvas.height = H;
     const ctx = canvas.getContext('2d')!;
 
-    // Draw background image
     const bg = new window.Image();
     bg.src = bgSrc;
     await new Promise<void>((res, rej) => {
@@ -77,10 +70,8 @@ async function buildShareImage(
     });
     ctx.drawImage(bg, 0, 0, W, H);
 
-    // Wait for custom fonts so canvas text renders correctly
     await document.fonts.ready;
 
-    // Read the actual scoped font-family names Next.js assigned
     const cs = getComputedStyle(document.body);
     const monoFamily = cs.getPropertyValue('--font-mono').trim() || 'monospace';
     const onestFamily = cs.getPropertyValue('--font-onest').trim() || 'sans-serif';
@@ -88,60 +79,40 @@ async function buildShareImage(
     const COCOA = '#4f1d16';
     const INK = '#0d3b9f';
     const PADDING = 100;
-    const MAX_TEXT_W = W - PADDING * 2; // 880px available
-
-    // Auto-fit font sizes so no line overflows
+    const MAX_TEXT_W = W - PADDING * 2;
     const SZ_HEADER = 50;
-    const enQuoteLines = enLines.map((l, i) => (i === 0 ? '\u201C' : '') + l + (i === enLines.length - 1 ? '\u201D' : ''));
-    const thQuoteLines = thLines.map((l, i) => (i === 0 ? '\u201C' : '') + l + (i === thLines.length - 1 ? '\u201D' : ''));
-    const szEN = fitFontSize(ctx, enQuoteLines, sz => `500 ${sz}px ${monoFamily}`, 52, 24, MAX_TEXT_W);
-    const szTH = fitFontSize(ctx, thQuoteLines, sz => `500 ${sz}px ${onestFamily}`, 44, 20, MAX_TEXT_W);
-
-    const LINE_H_EN = szEN + 16;
-    const LINE_H_TH = szTH + 14;
-
-    // Total block height for vertical centering
-    const enBlockH = enLines.length * LINE_H_EN;
-    const thBlockH = thLines.length * LINE_H_TH;
     const GAP_AFTER_HEADER = 90;
-    const GAP_EN_TH = 56;
     const GAP_BEFORE_SIG = 90;
-    const totalBlockH =
-        SZ_HEADER + GAP_AFTER_HEADER +
-        enBlockH +
-        GAP_EN_TH +
-        thBlockH +
-        GAP_BEFORE_SIG + SZ_HEADER;
 
-    let y = Math.round((H - totalBlockH) / 2) + SZ_HEADER;
+    const isEN = lang === 'en';
+    const lines = isEN ? enLines : thLines;
+    const fontFamily = isEN ? monoFamily : onestFamily;
+    const startSz = isEN ? 52 : 44;
+    const minSz = isEN ? 24 : 20;
+    const lineGap = isEN ? 16 : 14;
 
-    // "Dear, You!"
-    ctx.font = `500 ${SZ_HEADER}px ${monoFamily}`;
+    const quoteLines = lines.map(
+        (l, i) => (i === 0 ? '“' : '') + l + (i === lines.length - 1 ? '”' : '')
+    );
+    const sz = fitFontSize(ctx, quoteLines, s => `500 ${s}px ${fontFamily}`, startSz, minSz, MAX_TEXT_W);
+    const lineH = sz + lineGap;
+    const blockH = quoteLines.length * lineH;
+    const totalH = SZ_HEADER + GAP_AFTER_HEADER + blockH + GAP_BEFORE_SIG + SZ_HEADER;
+    let y = Math.round((H - totalH) / 2) + SZ_HEADER;
+
+    ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'left';
-    ctx.fillText('Dear, You!', PADDING, y);
+    ctx.fillText(dearLabel, PADDING, y);
     y += GAP_AFTER_HEADER;
 
-    // EN quote lines (auto-fitted size)
-    ctx.font = `500 ${szEN}px ${monoFamily}`;
+    ctx.font = `500 ${sz}px ${fontFamily}`;
     ctx.fillStyle = COCOA;
     ctx.textAlign = 'center';
-    enQuoteLines.forEach((line, i) => {
-        ctx.fillText(line, W / 2, y + i * LINE_H_EN);
-    });
-    y += enBlockH + GAP_EN_TH;
+    quoteLines.forEach((line, i) => ctx.fillText(line, W / 2, y + i * lineH));
+    y += blockH + GAP_BEFORE_SIG;
 
-    // TH quote lines (auto-fitted size)
-    ctx.font = `500 ${szTH}px ${onestFamily}`;
-    ctx.fillStyle = COCOA;
-    ctx.textAlign = 'center';
-    thQuoteLines.forEach((line, i) => {
-        ctx.fillText(line, W / 2, y + i * LINE_H_TH);
-    });
-    y += thBlockH + GAP_BEFORE_SIG;
-
-    // "Nadia :)"
-    ctx.font = `500 ${SZ_HEADER}px ${monoFamily}`;
+    ctx.font = `500 ${SZ_HEADER}px ${fontFamily}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'right';
     ctx.fillText('Nadia :)', W - PADDING, y);
@@ -170,22 +141,19 @@ export default function OverlayQuoteCard({
         setBtnState('working');
         let objectUrl: string | null = null;
         try {
-            const blob = await buildShareImage(bgSrc, enLines, thLines);
+            const blob = await buildShareImage(bgSrc, enLines, thLines, lang, t("overlay_dear"));
             const file = new File([blob], 'quote.png', { type: 'image/png' });
 
             if (navigator.canShare?.({ files: [file] })) {
-                // Mobile: native share sheet → Save Image, Instagram, WhatsApp, etc.
                 await navigator.share({ files: [file], title: 'A warm message for you' });
                 setBtnState('idle');
             } else if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
-                // Desktop Chrome/Edge: copy image pixels to clipboard → Ctrl+V works anywhere
                 await navigator.clipboard.write([
                     new ClipboardItem({ 'image/png': blob })
                 ]);
                 setBtnState('copied');
                 setTimeout(() => setBtnState('idle'), 2500);
             } else {
-                // Fallback: download the file
                 objectUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = objectUrl;
@@ -213,17 +181,11 @@ export default function OverlayQuoteCard({
 
     return (
         <div
-            className="
-        fixed inset-0 z-50
-        flex items-center justify-center
-        bg-ddInkBlue
-        p-3 sm:p-4
-      "
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ddInkBlue p-3 sm:p-4"
             role="dialog"
             aria-modal="true"
             onMouseDown={onClose}
         >
-            {/* grid overlay */}
             <div
                 className="pointer-events-none absolute inset-0"
                 style={{
@@ -237,43 +199,24 @@ export default function OverlayQuoteCard({
             />
 
             <div
-                className="
-          relative w-full
-          max-w-130 sm:max-w-162.5
-          animate-overlayEnter
-        "
+                className="relative w-full max-w-130 sm:max-w-162.5 animate-overlayEnter"
                 onMouseDown={(e) => e.stopPropagation()}
             >
                 {/* Buttons row */}
                 <div className="absolute right-3 top-3 z-60 flex gap-2 pointer-events-auto">
-                    {/* Share */}
                     <button
                         type="button"
                         onClick={handleShare}
                         disabled={btnState !== 'idle'}
-                        className="
-                            rounded-full border-2 border-ddInkBlue/70
-                            bg-ddBlush px-3 py-2 sm:px-4
-                            font-mono text-sm sm:text-md text-ddInkBlue
-                            shadow
-                            hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush
-                            disabled:opacity-50
-                        "
+                        className="rounded-full border-2 border-ddInkBlue/70 bg-ddBlush px-3 py-2 sm:px-4 font-mono text-sm sm:text-md text-ddInkBlue shadow hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush disabled:opacity-50"
                     >
                         {btnLabel}
                     </button>
 
-                    {/* Close */}
                     <button
                         type="button"
                         onClick={onClose}
-                        className="
-                            rounded-full border-2 border-ddInkBlue/70
-                            bg-ddBlush px-3 py-2 sm:px-4
-                            font-mono text-sm sm:text-md text-ddInkBlue
-                            shadow
-                            hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush
-                        "
+                        className="rounded-full border-2 border-ddInkBlue/70 bg-ddBlush px-3 py-2 sm:px-4 font-mono text-sm sm:text-md text-ddInkBlue shadow hover:bg-ddInkBlue hover:text-ddBlush hover:border-ddBlush"
                     >
                         {t("overlay_close")}
                     </button>
@@ -282,12 +225,8 @@ export default function OverlayQuoteCard({
                 {/* Card */}
                 <div
                     ref={cardRef}
-                    className="
-            relative w-full overflow-hidden
-            aspect-4/5 sm:aspect-square
-          "
+                    className="relative w-full overflow-hidden aspect-4/5 sm:aspect-square"
                 >
-                    {/* background image */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={bgSrc}
@@ -295,25 +234,8 @@ export default function OverlayQuoteCard({
                         className="absolute inset-0 w-full h-full object-contain"
                     />
 
-                    {/* Content */}
-                    <div
-                        className="
-              absolute inset-0
-              flex items-center justify-center
-              p-4 sm:p-8
-            "
-                    >
-                        <div
-                            className="
-    relative w-full
-    max-w-[min(86vw,320px)]
-    sm:max-w-105
-    lg:max-w-95
-    overflow-auto
-    rounded-xl lg:rounded-2xl
-    px-2 sm:px-0
-  "
-                        >
+                    <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-8">
+                        <div className="relative w-full max-w-[min(86vw,320px)] sm:max-w-105 lg:max-w-95 overflow-auto rounded-xl lg:rounded-2xl px-2 sm:px-0">
                             <p className="font-mono text-ddInkBlue text-md sm:text-[22px]">
                                 {t("overlay_dear")}
                             </p>
@@ -323,12 +245,7 @@ export default function OverlayQuoteCard({
                                     <div className="mx-auto max-w-[26ch] sm:max-w-[32ch]">
                                         <QuotedText
                                             lines={enLines}
-                                            className="
-                      font-mono text-ddCocoa
-                      text-[16px] sm:text-[22px]
-                      leading-relaxed
-                      text-balance
-                    "
+                                            className="font-mono text-ddCocoa text-[16px] sm:text-[22px] leading-relaxed text-balance"
                                         />
                                     </div>
                                 </div>
@@ -337,12 +254,7 @@ export default function OverlayQuoteCard({
                                     <div className="mx-auto max-w-[24ch] sm:max-w-[30ch]">
                                         <QuotedText
                                             lines={thLines}
-                                            className="
-                      font-onest text-ddCocoa
-                      text-[16px] sm:text-[22px]
-                      leading-relaxed
-                      text-balance
-                    "
+                                            className="font-onest text-ddCocoa text-[16px] sm:text-[22px] leading-relaxed text-balance"
                                         />
                                     </div>
                                 </div>
