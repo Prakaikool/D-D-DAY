@@ -338,7 +338,7 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                                 animationClass="animate-fadeInUp"
                                 delayClass="anim-delay-700"
                             >
-                                <div className="flex justify-center -mt-14 -mb-10 sm:-mt-26 sm:-mb-16 pointer-events-none">
+                                <div className="flex justify-center -mt-12 -mb-16 sm:-mt-26 sm:-mb-16 pointer-events-none">
                                     <Image
                                         src="/decor/letter.png"
                                         alt=""
