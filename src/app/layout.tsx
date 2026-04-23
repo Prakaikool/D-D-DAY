@@ -18,7 +18,11 @@ export const metadata: Metadata = {
     title: 'D-D-DAY',
     description: 'Whether you arrive here on a bright day or a heavy one, I hope these tiny messages bring you something warm.',
     icons: {
-        icon: '/favicon.ico',
+        icon: [
+            { url: '/favicon.ico', sizes: '48x48' },
+            { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+        ],
         apple: '/apple-touch-icon.png',
     },
 };
