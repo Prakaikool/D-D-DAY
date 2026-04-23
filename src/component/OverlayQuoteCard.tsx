@@ -57,8 +57,8 @@ async function buildShareImage(
     dearLabel: string,
     nadiaLabel: string
 ): Promise<Blob> {
-    // 4:5 — perfect for Instagram portrait and mobile screenshots
-    const W = 1080, H = 1350;
+    // 9:16 — fills a mobile screen (Instagram Story, WhatsApp, etc.)
+    const W = 1080, H = 1920;
     const canvas = document.createElement('canvas');
     canvas.width = W;
     canvas.height = H;
@@ -88,14 +88,11 @@ async function buildShareImage(
         bg.onerror = rej;
     });
 
-    // Draw card centered, maintaining natural aspect ratio, with outer padding
-    const OUTER_PAD = 90;
-    const maxCardW = W - OUTER_PAD * 2;
-    const maxCardH = H - OUTER_PAD * 2;
-    const scale = Math.min(maxCardW / bg.naturalWidth, maxCardH / bg.naturalHeight);
-    const cardW = Math.round(bg.naturalWidth * scale);
-    const cardH = Math.round(bg.naturalHeight * scale);
-    const cardX = Math.round((W - cardW) / 2);
+    // Scale card to fill full canvas width (small side padding), center vertically
+    const SIDE_PAD = 40;
+    const cardW = W - SIDE_PAD * 2;
+    const cardH = Math.round(bg.naturalHeight * (cardW / bg.naturalWidth));
+    const cardX = SIDE_PAD;
     const cardY = Math.round((H - cardH) / 2);
 
     ctx.drawImage(bg, cardX, cardY, cardW, cardH);
@@ -110,8 +107,8 @@ async function buildShareImage(
     const COCOA = '#4f1d16';
     const INK = '#0d3b9f';
 
-    // Responsive sizes based on actual card width
-    const TEXT_PAD = Math.round(cardW * 0.09);
+    // TEXT_PAD accounts for the thick scalloped border (~18% each side)
+    const TEXT_PAD = Math.round(cardW * 0.18);
     const MAX_TEXT_W = cardW - TEXT_PAD * 2;
     const SZ_HEADER = Math.round(cardW * 0.048);
     const GAP_AFTER_HEADER = Math.round(cardH * 0.09);
