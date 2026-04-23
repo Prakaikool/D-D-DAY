@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MESSAGES } from '@/data/messages';
 import QuoteBlock from '@/component/QuoteBlock';
 import ScrollReveal from './ScrollReveal';
@@ -53,6 +53,67 @@ export default function Content({ onOpenOverlay }: ContentProps) {
 
     const dateLabel = useMemo(() => formatDate(new Date()), []);
 
+    const rainbowRef = useRef<HTMLDivElement>(null);
+    const sunRef = useRef<HTMLDivElement>(null);
+    const heartRef = useRef<HTMLDivElement>(null);
+    const starRef = useRef<HTMLDivElement>(null);
+    const cardWrapRef = useRef<HTMLDivElement>(null);
+    const cardTiltRef = useRef<HTMLDivElement>(null);
+    const [shaking, setShaking] = useState(false);
+
+    useEffect(() => {
+        const target = { x: 0, y: 0 };
+        const current = { x: 0, y: 0 };
+        let raf: number;
+
+        function lerp(a: number, b: number, t: number) {
+            return a + (b - a) * t;
+        }
+
+        function tick() {
+            current.x = lerp(current.x, target.x, 0.07);
+            current.y = lerp(current.y, target.y, 0.07);
+            if (rainbowRef.current)
+                rainbowRef.current.style.transform = `translate(${current.x * 16}px,${current.y * 10}px)`;
+            if (sunRef.current)
+                sunRef.current.style.transform = `translate(${current.x * 28}px,${current.y * 18}px)`;
+            if (heartRef.current)
+                heartRef.current.style.transform = `translate(${current.x * -20}px,${current.y * -13}px)`;
+            if (starRef.current)
+                starRef.current.style.transform = `translate(${current.x * -24}px,${current.y * -15}px)`;
+            raf = requestAnimationFrame(tick);
+        }
+
+        function onMove(e: MouseEvent) {
+            target.x = (e.clientX / window.innerWidth - 0.5) * 2;
+            target.y = (e.clientY / window.innerHeight - 0.5) * 2;
+        }
+
+        window.addEventListener('mousemove', onMove, { passive: true });
+        raf = requestAnimationFrame(tick);
+        return () => {
+            window.removeEventListener('mousemove', onMove);
+            cancelAnimationFrame(raf);
+        };
+    }, []);
+
+    function onCardMouseMove(e: React.MouseEvent) {
+        const rect = cardWrapRef.current!.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+        const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+        if (cardTiltRef.current) {
+            cardTiltRef.current.style.transform = `rotateX(${-y * 3}deg) rotateY(${x * 3}deg)`;
+            cardTiltRef.current.style.transition = 'transform 0.12s ease-out';
+        }
+    }
+
+    function onCardMouseLeave() {
+        if (cardTiltRef.current) {
+            cardTiltRef.current.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            cardTiltRef.current.style.transition = 'transform 0.5s ease-out';
+        }
+    }
+
     function readDailyState(): { dateKey: string; used: number[] } {
         const todayKey = getTodayKey();
         try {
@@ -97,7 +158,6 @@ export default function Content({ onOpenOverlay }: ContentProps) {
         const state = readDailyState();
         const usedSet = new Set(state.used.filter((n) => n >= 0 && n < total));
 
-        // กันไม่ให้ซ้ำกับอันเดิมทันที
         usedSet.add(prevIndex);
 
         let candidates: number[] = [];
@@ -149,109 +209,160 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                 Math.floor(Math.random() * CARD_BACKGROUNDS.length)
             ];
 
-        onOpenOverlay({
-            bgSrc: nextBg,
-            enLines: msg.en,
-            thLines: msg.th
-        });
+        setShaking(true);
+        setTimeout(() => {
+            onOpenOverlay({
+                bgSrc: nextBg,
+                enLines: msg.en,
+                thLines: msg.th
+            });
+        }, 420);
     }
 
     return (
         <main>
             {/* OUTER FRAME */}
-            <div className="mx-auto max-w-[1400px] px-6 sm:px-6 pt-6 sm:pt-12 pb-8 sm:pb-12">
-                {/* TOP BAR */}
-                <div className="flex items-center justify-between border-2 border-ddCocoa bg-ddCocoa px-4 sm:px-6 py-3 sm:py-4">
-                    <ScrollReveal
-                        animationClass="animate-slideInDown"
-                        delayClass="anim-delay-200"
-                    >
-                        <div className="font-mono text-lg sm:text-2xl tracking-[0.25em] text-ddSky">
-                            D-D-DAY
-                        </div>
-                    </ScrollReveal>
-                    <ScrollReveal
-                        animationClass="animate-slideInDown"
-                        delayClass="anim-delay-200"
-                    >
-                        <button
-                            onClick={() => {
-                                document
-                                    .getElementById('about')
-                                    ?.scrollIntoView({
-                                        behavior: 'smooth'
-                                    });
-                            }}
-                            className="
+            <div className="mx-auto max-w-[1400px] px-6 sm:px-6 pt-6 sm:pt-8 pb-8 sm:pb-12">
+                <div
+                    ref={cardWrapRef}
+                    onMouseMove={onCardMouseMove}
+                    onMouseLeave={onCardMouseLeave}
+                    style={{ perspective: '1200px' }}
+                >
+                    <div ref={cardTiltRef} style={{ willChange: 'transform' }}>
+                        {/* TOP BAR */}
+                        <div className="flex items-center justify-between border-2 border-ddCocoa bg-ddCocoa px-4 sm:px-6 py-3 sm:py-4">
+                            <ScrollReveal
+                                animationClass="animate-slideInDown"
+                                delayClass="anim-delay-200"
+                            >
+                                <div className="font-mono text-lg sm:text-2xl tracking-[0.25em] text-ddSky">
+                                    D-D-DAY
+                                </div>
+                            </ScrollReveal>
+                            <ScrollReveal
+                                animationClass="animate-slideInDown"
+                                delayClass="anim-delay-200"
+                            >
+                                <button
+                                    onClick={() => {
+                                        document
+                                            .getElementById('about')
+                                            ?.scrollIntoView({
+                                                behavior: 'smooth'
+                                            });
+                                    }}
+                                    className="
               font-mono text-base sm:text-xl tracking-[0.2em] text-ddSky
               transition-all duration-300 ease-out
               hover:text-white hover:scale-110
             "
-                        >
-                            ABOUT
-                        </button>
-                    </ScrollReveal>
-                </div>
+                                >
+                                    ABOUT
+                                </button>
+                            </ScrollReveal>
+                        </div>
 
-                {/* MAIN CARD */}
-                <div className="relative overflow-hidden rounded-b-3xl border-x-4 border-b-4 border-ddCocoa shadow-[0_14px_0_rgba(79,29,22,0.25)]">
-                    <div className="absolute inset-0 bg-gradient-to-b from-ddSky via-[#EAF2FF] to-ddButter" />
+                        {/* MAIN CARD */}
+                        <div className="relative overflow-hidden rounded-b-3xl border-x-4 border-b-4 border-ddCocoa shadow-[0_14px_0_rgba(79,29,22,0.25)]">
+                            <div className="absolute inset-0 bg-gradient-to-b from-ddSky via-[#fbe8d4] to-ddButter" />
 
-                    <div
-                        className="pointer-events-none absolute inset-0"
-                        style={{
-                            backgroundImage: `
-                linear-gradient(to right, rgba(247,191,204,0.55) 2px, transparent 2px),
-                linear-gradient(to bottom, rgba(247,191,204,0.55) 2px, transparent 2px)
+                            <div
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                    backgroundImage: `
+                linear-gradient(to right, rgba(247,191,204,0.55) 2px, transparent 1px),
+                linear-gradient(to bottom, rgba(247,191,204,0.55) 2px, transparent 1px)
               `,
-                            backgroundSize: '56px 56px',
-                            opacity: 0.55
-                        }}
-                    />
+                                    backgroundSize: '56px 56px',
+                                    opacity: 0.4
+                                }}
+                            />
 
-                    {/* DECOR */}
-                    <Image
-                        src="/decor/rainbow.png"
-                        alt=""
-                        width={350}
-                        height={350}
-                        className="pointer-events-none absolute -left-10 sm:-left-2 top-2 opacity-40 sm:opacity-50 animate-float w-[220px] sm:w-[350px] h-auto"
-                        priority
-                    />
-                    <Image
-                        src="/decor/sun.png"
-                        alt=""
-                        width={120}
-                        height={120}
-                        className="pointer-events-none absolute right-6 sm:right-20 top-10 sm:top-16 opacity-50 sm:opacity-60 animate-float [animation-delay:0.6s] w-[80px] sm:w-[120px] h-auto"
-                    />
-                    <Image
-                        src="/decor/heart.png"
-                        alt=""
-                        width={120}
-                        height={120}
-                        className="pointer-events-none absolute bottom-24 sm:bottom-16 right-10 sm:right-44 opacity-50 sm:opacity-60 animate-float [animation-delay:1.2s] w-[80px] sm:w-[120px] h-auto"
-                    />
-                    <Image
-                        src="/decor/star.png"
-                        alt=""
-                        width={140}
-                        height={140}
-                        className="pointer-events-none absolute bottom-20 sm:bottom-14 left-8 sm:left-24 opacity-60 sm:opacity-70 rotate-12 animate-float [animation-delay:0.3s] w-[90px] sm:w-[140px] h-auto"
-                    />
+                            {/* DECOR */}
+                            <div
+                                ref={rainbowRef}
+                                className="pointer-events-none absolute -left-10 sm:-left-2 top-2"
+                            >
+                                <Image
+                                    src="/decor/rainbow.png"
+                                    alt=""
+                                    width={350}
+                                    height={350}
+                                    className="opacity-40 sm:opacity-50 animate-float w-55 sm:w-87.5 h-auto"
+                                    priority
+                                />
+                            </div>
+                            <div
+                                ref={sunRef}
+                                className="pointer-events-none absolute right-6 sm:right-20 top-10 sm:top-16"
+                            >
+                                <Image
+                                    src="/decor/sun.png"
+                                    alt=""
+                                    width={120}
+                                    height={120}
+                                    className="opacity-50 sm:opacity-60 animate-float [animation-delay:0.6s] w-20 sm:w-30 h-auto"
+                                />
+                            </div>
+                            <div
+                                ref={heartRef}
+                                className="pointer-events-none absolute bottom-16 sm:bottom-16 right-10 sm:right-44"
+                            >
+                                <Image
+                                    src="/decor/heart.png"
+                                    alt=""
+                                    width={120}
+                                    height={120}
+                                    className="opacity-50 sm:opacity-60 animate-float [animation-delay:1.2s] w-20 sm:w-30 h-auto"
+                                />
+                            </div>
+                            <div
+                                ref={starRef}
+                                className="pointer-events-none absolute bottom-12 sm:bottom-14 left-8 sm:left-24"
+                            >
+                                <Image
+                                    src="/decor/star.png"
+                                    alt=""
+                                    width={140}
+                                    height={140}
+                                    className="opacity-60 sm:opacity-70 rotate-12 animate-float [animation-delay:0.3s] w-22.5 sm:w-35 h-auto"
+                                />
+                            </div>
 
-                    {/* CONTENT */}
-                    <QuoteBlock dateLabel={dateLabel} />
+                            {/* CONTENT */}
+                            <QuoteBlock dateLabel={dateLabel} />
 
-                    {/* button */}
-                    <ScrollReveal
-                        animationClass="animate-slideInUp"
-                        delayClass="anim-delay-600"
-                    >
-                        <div className="relative -mt-32 sm:-mt-28 pb-10 sm:pb-16 flex justify-center px-4">
-                            <button
-                                onClick={onClickRandom}
-                                className="
+                            {/* Candies — shake like a fortune cookie on click */}
+                            <ScrollReveal
+                                animationClass="animate-fadeInUp"
+                                delayClass="anim-delay-700"
+                            >
+                                <div className="flex justify-center -mt-14 -mb-10 sm:-mt-26 sm:-mb-16 pointer-events-none">
+                                    <Image
+                                        src="/decor/letter.png"
+                                        alt=""
+                                        width={400}
+                                        height={300}
+                                        className={`w-55 sm:w-80 h-auto transition-none ${shaking ? 'animate-candyShake' : ''}`}
+                                        onAnimationEnd={() => setShaking(false)}
+                                        style={{
+                                            filter: 'contrast(1) brightness(1)',
+                                            mixBlendMode: 'screen'
+                                        }}
+                                    />
+                                </div>
+                            </ScrollReveal>
+
+                            {/* button */}
+                            <ScrollReveal
+                                animationClass="animate-slideInUp"
+                                delayClass="anim-delay-600"
+                            >
+                                <div className="relative pb-8 sm:pb-14 flex justify-center px-4">
+                                    <button
+                                        onClick={onClickRandom}
+                                        className="
                 group relative overflow-hidden
                 rounded-full border-2 border-ddInkBlue bg-ddBlush
                 px-8 sm:px-10 py-3
@@ -263,9 +374,9 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                 active:translate-y-[3px]
                 active:shadow-[0_5px_0_rgba(79,29,22,0.25)]
               "
-                            >
-                                <span
-                                    className="
+                                    >
+                                        <span
+                                            className="
                   pointer-events-none absolute inset-0
                   -translate-x-full
                   bg-gradient-to-r from-transparent via-white/30 to-transparent
@@ -273,27 +384,32 @@ export default function Content({ onOpenOverlay }: ContentProps) {
                   group-hover:opacity-100 group-hover:translate-x-full
                   transition duration-700
                 "
-                                />
-                                <span className="relative z-10">
-                                    Click here!
-                                </span>
-                                <span
-                                    className="
+                                        />
+                                        <span className="relative z-10">
+                                            Click here!
+                                        </span>
+                                        <span className="pointer-events-none absolute inset-0 rounded-full animate-ctaRingPulse transition-opacity duration-200 group-hover:opacity-0" />
+                                        <span
+                                            className="
                   pointer-events-none absolute inset-0 rounded-full
                   ring-0 ring-ddInkBlue/30
                   transition-all duration-300
                   group-hover:ring-4
                 "
-                                />
-                            </button>
-                        </div>
-                    </ScrollReveal>
+                                        />
+                                    </button>
+                                </div>
+                            </ScrollReveal>
 
-                    {/* corner dot */}
-                    <div className="absolute bottom-3 right-4 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush">
-                        <div className="absolute inset-1 rounded-full bg-white/30" />
+                            {/* corner dot */}
+                            <div className="absolute bottom-3 right-4 h-5 w-5 sm:h-6 sm:w-6 rounded-full border-2 border-ddCocoa bg-ddBlush">
+                                <div className="absolute inset-1 rounded-full bg-white/30" />
+                            </div>
+                        </div>
                     </div>
+                    {/* cardTiltRef */}
                 </div>
+                {/* cardWrapRef */}
             </div>
         </main>
     );

@@ -10,7 +10,7 @@ export default function QuoteBlock({
     dateLabel
 }: QuoteBlockProps) {
     return (
-        <div className="relative min-h-[680px] sm:min-h-[520px] px-6 py-8 sm:px-10 sm:py-10">
+        <div className="relative px-6 pt-8 pb-6 sm:px-10 sm:pt-10 sm:pb-8">
             {/* date */}
             <ScrollReveal
                 animationClass="animate-slideInLeft"
@@ -28,7 +28,7 @@ export default function QuoteBlock({
             >
                 <h1
                     className="
-          mt-20 sm:mt-14
+          mt-10 sm:mt-14
           text-center
           font-onest font-semibold leading-tight text-ddCocoa
           text-[34px] sm:text-[46px] lg:text-[58px]
@@ -46,7 +46,7 @@ export default function QuoteBlock({
             >
                 <div
                     className="
-          mt-10 sm:mt-10
+          mt-5 sm:mt-10
           text-center
           font-mono leading-relaxed text-ddInkBlue
           text-md sm:text-xl

@@ -47,7 +47,7 @@ export default function AboutSection() {
                     className="
             relative
             rounded-2xl
-           bg-gradient-to-b from-ddSky via-[#EAF2FF] to-ddButter
+           bg-gradient-to-b from-ddSky via-[#fbe8d4] to-ddButter
             px-5 py-10
             sm:px-10 sm:py-16
             lg:px-12 lg:py-20
@@ -63,7 +63,7 @@ export default function AboutSection() {
                 linear-gradient(to bottom, rgba(247,191,204,0.55) 2px, transparent 2px)
               `,
                             backgroundSize: '56px 56px',
-                            opacity: 0.55
+                            opacity: 0.4
                         }}
                     />
                     {/* subtle highlight blob */}
@@ -187,8 +187,9 @@ export default function AboutSection() {
                 font-mono font-bold tracking-[0.2em]
                 text-ddInkBlue
                 text-md sm:text-lg lg:text-xl
+                underline underline-offset-4 decoration-ddInkBlue/40
                 transition-all duration-300
-                hover:text-ddBlush hover:scale-110
+                hover:text-ddCocoa hover:decoration-ddCocoa hover:scale-110
               "
                             >
                                 PORTFOLIO

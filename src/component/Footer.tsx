@@ -34,8 +34,9 @@ export default function Footer({
               inline-block
               font-mono font-bold tracking-[0.2em]
               text-base text-ddCocoa
+              underline underline-offset-4 decoration-ddCocoa/40
               transition-all duration-300
-              hover:text-ddInkBlue hover:scale-110
+              hover:text-ddInkBlue hover:decoration-ddInkBlue hover:scale-110
               sm:text-lg lg:text-xl
               self-start sm:self-auto
             "
